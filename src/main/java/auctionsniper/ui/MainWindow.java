@@ -2,12 +2,9 @@ package auctionsniper.ui;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
-
 import java.awt.*;
 
-import static auctionsniper.AppConstants.MAIN_WINDOW_NAME;
-import static auctionsniper.AppConstants.SNIPER_STATUS_NAME;
-import static auctionsniper.AppConstants.STATUS_JOINING;
+import static auctionsniper.AppConstants.*;
 
 public class MainWindow extends JFrame {
     private final JLabel sniperStatus = createLabel(STATUS_JOINING);
