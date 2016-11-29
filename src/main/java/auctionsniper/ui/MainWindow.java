@@ -7,6 +7,7 @@ import java.awt.*;
 import static auctionsniper.AppConstants.*;
 
 public class MainWindow extends JFrame {
+
     private final JLabel sniperStatus = createLabel(STATUS_JOINING);
 
     public MainWindow() {
@@ -23,5 +24,9 @@ public class MainWindow extends JFrame {
         result.setName(SNIPER_STATUS_NAME);
         result.setBorder(new LineBorder(Color.black));
         return result;
+    }
+
+    public void showStatus(String status) {
+        sniperStatus.setText(status);
     }
 }

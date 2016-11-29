@@ -28,6 +28,9 @@ public class Main {
 
     private MainWindow ui;
 
+    @SuppressWarnings("unused")
+    private Chat notToBeGCd;
+
     public Main() throws Exception {
         startUserInterface();
     }
@@ -37,14 +40,20 @@ public class Main {
     }
 
     public static void main(String... args) throws Exception {
-        new Main();
+        Main main = new Main();
+        main.joinAuction(
+                connectTo(args[ARGS_HOSTNAME], args[ARGS_USERNAME], args[ARGS_PASSWORD]),
+                args[ARGS_ITEM_ID]);
+    }
 
-        XMPPConnection connection = connectTo(args[ARGS_HOSTNAME], args[ARGS_USERNAME], args[ARGS_PASSWORD]);
-        Chat chat = ChatManager.getInstanceFor(connection).createChat(
-                auctionId(args[ARGS_ITEM_ID], connection),
+    private void joinAuction(XMPPConnection connection, String itemId) throws Exception {
+        final Chat chat = ChatManager.getInstanceFor(connection).createChat(
+                auctionId(itemId, connection),
                 (aChat, aMessage) -> {
-                    // TODO
+                    SwingUtilities.invokeLater(() -> ui.showStatus(AppConstants.STATUS_LOST));
                 });
+        this.notToBeGCd = chat;
+
         chat.sendMessage(new Message());
     }
 
