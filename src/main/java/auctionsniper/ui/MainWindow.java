@@ -15,6 +15,7 @@ public class MainWindow extends JFrame {
         add(sniperStatus);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
+        pack();
     }
 
     private static JLabel createLabel(String initialText) {
