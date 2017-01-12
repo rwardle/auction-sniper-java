@@ -6,7 +6,6 @@ import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.chat.Chat;
 import org.jivesoftware.smack.chat.ChatManager;
-import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 import org.jxmpp.jid.impl.JidCreate;
@@ -61,11 +60,7 @@ public class FakeAuctionServer {
     }
 
     public void reportPrice(int price, int increment, String bidder) throws SmackException, InterruptedException {
-        currentChat.sendMessage(format(
-                "SOLVersion: 1.1; Event: PRICE; " + "CurrentPrice: %d; Increment: %d; Bidder: %s;",
-                price,
-                increment,
-                bidder));
+        currentChat.sendMessage(format(PRICE_COMMAND_FORMAT, price, increment, bidder));
     }
 
     public void hasReceivedBid(int bid, String sniperId) throws InterruptedException {
@@ -73,7 +68,7 @@ public class FakeAuctionServer {
     }
 
     public void announceClosed() throws SmackException, InterruptedException {
-        currentChat.sendMessage(new Message());
+        currentChat.sendMessage(CLOSE_COMMAND_FORMAT);
     }
 
     public void stop() {

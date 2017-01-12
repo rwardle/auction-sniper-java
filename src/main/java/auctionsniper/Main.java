@@ -18,7 +18,7 @@ import java.awt.event.WindowEvent;
 
 import static auctionsniper.AppConstants.*;
 
-public class Main {
+public class Main implements SniperListener {
 
     private static final int ARGS_HOSTNAME = 0;
     private static final int ARGS_USERNAME = 1;
@@ -51,7 +51,7 @@ public class Main {
         disconnectWhenUICloses(connection);
         final Chat chat = ChatManager.getInstanceFor(connection).createChat(
                 auctionId(itemId, connection),
-                (aChat, aMessage) -> SwingUtilities.invokeLater(() -> ui.showStatus(STATUS_LOST)));
+                new AuctionMessageTranslator(new AuctionSniper(this)));
         this.notToBeGCd = chat;
         chat.sendMessage(JOIN_COMMAND_FORMAT);
     }
@@ -80,5 +80,10 @@ public class Main {
 
     private static EntityJid auctionId(String itemId, XMPPConnection connection) throws XmppStringprepException {
         return JidCreate.from(String.format(AUCTION_ID_FORMAT, itemId, connection.getServiceName())).asEntityJidIfPossible();
+    }
+
+    @Override
+    public void sniperLost() {
+        SwingUtilities.invokeLater(() -> ui.showStatus(STATUS_LOST));
     }
 }
