@@ -1,5 +1,6 @@
 package auctionsniper;
 
+import static auctionsniper.AppConstants.STATUS_BIDDING;
 import static auctionsniper.AppConstants.STATUS_JOINING;
 import static auctionsniper.AppConstants.STATUS_LOST;
 
@@ -33,6 +34,10 @@ public class ApplicationRunner {
 
         driver = new AuctionSniperDriver(1000);
         driver.showsSniperStatus(STATUS_JOINING);
+    }
+
+    public void hasShownSniperIsBidding() {
+        driver.showsSniperStatus(STATUS_BIDDING);
     }
 
     public void showsSniperHasLostAuction() {

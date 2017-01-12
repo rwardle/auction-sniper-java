@@ -5,7 +5,6 @@ import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.chat.Chat;
 import org.jivesoftware.smack.chat.ChatManager;
-import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 import org.jxmpp.jid.EntityJid;
@@ -14,6 +13,8 @@ import org.jxmpp.jid.parts.Resourcepart;
 import org.jxmpp.stringprep.XmppStringprepException;
 
 import javax.swing.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import static auctionsniper.AppConstants.*;
 
@@ -46,18 +47,25 @@ public class Main {
                 args[ARGS_ITEM_ID]);
     }
 
-    private void joinAuction(XMPPConnection connection, String itemId) throws Exception {
+    private void joinAuction(XMPPTCPConnection connection, String itemId) throws Exception {
+        disconnectWhenUICloses(connection);
         final Chat chat = ChatManager.getInstanceFor(connection).createChat(
                 auctionId(itemId, connection),
-                (aChat, aMessage) -> {
-                    SwingUtilities.invokeLater(() -> ui.showStatus(AppConstants.STATUS_LOST));
-                });
+                (aChat, aMessage) -> SwingUtilities.invokeLater(() -> ui.showStatus(STATUS_LOST)));
         this.notToBeGCd = chat;
-
-        chat.sendMessage(new Message());
+        chat.sendMessage(JOIN_COMMAND_FORMAT);
     }
 
-    private static XMPPConnection connectTo(String hostname, String username, String password) throws Exception {
+    private void disconnectWhenUICloses(XMPPTCPConnection connection) {
+        ui.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                connection.disconnect();
+            }
+        });
+    }
+
+    private static XMPPTCPConnection connectTo(String hostname, String username, String password) throws Exception {
         XMPPTCPConnectionConfiguration config = XMPPTCPConnectionConfiguration.builder()
                 .setHost(hostname)
                 .setXmppDomain(JidCreate.from(XMPP_DOMAIN).asDomainBareJid())

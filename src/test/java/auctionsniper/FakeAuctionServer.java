@@ -1,5 +1,6 @@
 package auctionsniper;
 
+import org.hamcrest.Matcher;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
@@ -15,6 +16,9 @@ import org.jxmpp.stringprep.XmppStringprepException;
 import java.io.IOException;
 
 import static auctionsniper.AppConstants.*;
+import static java.lang.String.format;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.assertThat;
 
 public class FakeAuctionServer {
 
@@ -39,7 +43,7 @@ public class FakeAuctionServer {
 
     public void startSellingItem() throws IOException, XMPPException, SmackException, InterruptedException {
         connection.connect();
-        connection.login(String.format(ITEM_ID_AS_LOGIN, itemId), AUCTION_PASSWORD, Resourcepart.from(AUCTION_RESOURCE));
+        connection.login(format(ITEM_ID_AS_LOGIN, itemId), AUCTION_PASSWORD, Resourcepart.from(AUCTION_RESOURCE));
         ChatManager.getInstanceFor(connection).addChatListener(
                 (chat, createdLocally) -> {
                     currentChat = chat;
@@ -47,11 +51,28 @@ public class FakeAuctionServer {
                 });
     }
 
-    public void hasReceivedJoinRequestFromSniper() throws Exception {
-        messageListener.receivesAMessage();
+    public void hasReceivedJoinRequestFrom(String sniperId) throws InterruptedException {
+        receivesAMessageMatching(sniperId, equalTo(JOIN_COMMAND_FORMAT));
     }
 
-    public void announceClosed() throws SmackException.NotConnectedException, InterruptedException {
+    private void receivesAMessageMatching(String sniperId, Matcher<? super String> messageMatcher) throws InterruptedException {
+        messageListener.receivesAMessage(messageMatcher);
+        assertThat(currentChat.getParticipant(), equalTo(sniperId));
+    }
+
+    public void reportPrice(int price, int increment, String bidder) throws SmackException, InterruptedException {
+        currentChat.sendMessage(format(
+                "SOLVersion: 1.1; Event: PRICE; " + "CurrentPrice: %d; Increment: %d; Bidder: %s;",
+                price,
+                increment,
+                bidder));
+    }
+
+    public void hasReceivedBid(int bid, String sniperId) throws InterruptedException {
+        receivesAMessageMatching(sniperId, equalTo(format(BID_COMMAND_FORMAT, bid)));
+    }
+
+    public void announceClosed() throws SmackException, InterruptedException {
         currentChat.sendMessage(new Message());
     }
 
