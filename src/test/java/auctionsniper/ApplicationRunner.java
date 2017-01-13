@@ -1,8 +1,6 @@
 package auctionsniper;
 
-import static auctionsniper.AppConstants.STATUS_BIDDING;
-import static auctionsniper.AppConstants.STATUS_JOINING;
-import static auctionsniper.AppConstants.STATUS_LOST;
+import static auctionsniper.AppConstants.*;
 
 public class ApplicationRunner {
 

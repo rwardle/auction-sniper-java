@@ -20,7 +20,7 @@ public class AuctionMessageTranslator implements ChatMessageListener {
     public void processMessage(Chat chat, Message message) {
         Map<String, String> event = unpackEventFrom(message);
 
-        switch(event.get("Event")) {
+        switch (event.get("Event")) {
             case "CLOSE":
                 listener.auctionClosed();
                 break;
