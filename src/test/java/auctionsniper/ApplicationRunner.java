@@ -15,7 +15,7 @@ public class ApplicationRunner {
         this.hostname = hostname;
     }
 
-    public void startBiddingIn(final FakeAuctionServer auction) {
+    public void startBiddingIn(FakeAuctionServer auction) {
         Thread thread = new Thread("Test Application") {
             @Override
             public void run() {

@@ -21,7 +21,7 @@ public class AuctionSniperDriver {
                 .using(BasicRobot.robotWithCurrentAwtHierarchy());
     }
 
-    public void showsSniperStatus(final String statusText) {
+    public void showsSniperStatus(String statusText) {
         String description = String.format("Sniper Status label text to be '%s'", statusText);
         Pause.pause(new Condition(description) {
             @Override
