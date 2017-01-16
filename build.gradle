@@ -1,9 +1,12 @@
 plugins {
     id "java"
+    id "application"
 }
 
 group "com.richardwardle"
 version "1.0-SNAPSHOT"
+
+mainClassName = "auctionsniper.Main"
 
 repositories {
     mavenCentral()
