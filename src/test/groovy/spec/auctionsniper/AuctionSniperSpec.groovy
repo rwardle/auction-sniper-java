@@ -24,13 +24,7 @@ class AuctionSniperSpec extends Specification {
 
     def "sniper joins auction until auction closes"() {
         given:
-        auction.startSellingItem()
-
-        when:
-        application.startBiddingIn(auction)
-
-        then:
-        auction.hasReceivedJoinRequestFrom(SNIPER_XMPP_ID)
+        sniperJoinsAuction()
 
         when:
         auction.announceClosed()
@@ -41,13 +35,7 @@ class AuctionSniperSpec extends Specification {
 
     def "sniper makes a higher bid but loses"() {
         given:
-        auction.startSellingItem()
-
-        when:
-        application.startBiddingIn(auction)
-
-        then:
-        auction.hasReceivedJoinRequestFrom(SNIPER_XMPP_ID)
+        sniperJoinsAuction()
 
         when:
         auction.reportPrice(1000, 98, "other bidder")
@@ -63,5 +51,11 @@ class AuctionSniperSpec extends Specification {
 
         then:
         application.showsSniperHasLostAuction()
+    }
+
+    def sniperJoinsAuction() {
+        auction.startSellingItem()
+        application.startBiddingIn(auction)
+        auction.hasReceivedJoinRequestFrom(SNIPER_XMPP_ID)
     }
 }
