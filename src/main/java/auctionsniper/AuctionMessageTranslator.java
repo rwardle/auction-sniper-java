@@ -7,13 +7,20 @@ import org.jivesoftware.smack.packet.Message;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import static auctionsniper.AuctionEventListener.PriceSource.FromOtherBidder;
+import static auctionsniper.AuctionEventListener.PriceSource.FromSniper;
 import static java.util.stream.Collectors.toMap;
 
 public class AuctionMessageTranslator implements ChatMessageListener {
 
+    private static final String EVENT_TYPE_CLOSE = "CLOSE";
+    private static final String EVENT_TYPE_PRICE = "PRICE";
+
+    private final String sniperId;
     private final AuctionEventListener listener;
 
-    public AuctionMessageTranslator(AuctionEventListener listener) {
+    public AuctionMessageTranslator(String sniperId, AuctionEventListener listener) {
+        this.sniperId = sniperId;
         this.listener = listener;
     }
 
@@ -21,11 +28,11 @@ public class AuctionMessageTranslator implements ChatMessageListener {
         AuctionEvent event = AuctionEvent.from(message.getBody());
 
         switch (event.type()) {
-            case "CLOSE":
+            case EVENT_TYPE_CLOSE:
                 listener.auctionClosed();
                 break;
-            case "PRICE":
-                listener.currentPrice(event.currentPrice(), event.increment());
+            case EVENT_TYPE_PRICE:
+                listener.currentPrice(event.currentPrice(), event.increment(), event.isFrom(sniperId));
                 break;
         }
     }
@@ -40,16 +47,24 @@ public class AuctionMessageTranslator implements ChatMessageListener {
                     .collect(toMap(p -> p[0].trim(), p -> p[1].trim()));
         }
 
-        public String type() {
+        String type() {
             return get("Event");
         }
 
-        public int currentPrice() {
+        int currentPrice() {
             return getInt("CurrentPrice");
         }
 
-        public int increment() {
+        int increment() {
             return getInt("Increment");
+        }
+
+        AuctionEventListener.PriceSource isFrom(String sniperId) {
+            return sniperId.equals(bidder()) ? FromSniper : FromOtherBidder;
+        }
+
+        private String bidder() {
+            return get("Bidder");
         }
 
         private String get(String fieldName) {

@@ -36,15 +36,7 @@ class AuctionSniperSpec extends Specification {
     def "sniper makes a higher bid but loses"() {
         given:
         sniperJoinsAuction()
-
-        when:
-        auction.reportPrice(1000, 98, "other bidder")
-
-        then:
-        application.hasShownSniperIsBidding()
-
-        and:
-        auction.hasReceivedBid(1098, SNIPER_XMPP_ID)
+        sniperReceivesPriceAndBids(1000, 98, "other bidder")
 
         when:
         auction.announceClosed()
@@ -53,9 +45,33 @@ class AuctionSniperSpec extends Specification {
         application.showsSniperHasLostAuction()
     }
 
+    def "sniper wins an auction by bidding higher"() {
+        given:
+        sniperJoinsAuction()
+        sniperReceivesPriceAndBids(1000, 98, "other bidder")
+
+        when:
+        auction.reportPrice(1098, 97, SNIPER_XMPP_ID)
+
+        then:
+        application.hasShownSniperIsWinning()
+
+        when:
+        auction.announceClosed()
+
+        then:
+        application.showsSniperHasWonAuction()
+    }
+
     def sniperJoinsAuction() {
         auction.startSellingItem()
         application.startBiddingIn(auction)
         auction.hasReceivedJoinRequestFrom(SNIPER_XMPP_ID)
+    }
+
+    def sniperReceivesPriceAndBids(int price, int increment, String bidder) {
+        auction.reportPrice(price, increment, bidder)
+        application.hasShownSniperIsBidding()
+        auction.hasReceivedBid(1098, SNIPER_XMPP_ID)
     }
 }

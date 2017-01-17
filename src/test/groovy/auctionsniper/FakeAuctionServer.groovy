@@ -50,7 +50,7 @@ class FakeAuctionServer {
         receivesAMessageMatching(sniperId, equalTo(JOIN_COMMAND_FORMAT))
     }
 
-    void receivesAMessageMatching(String sniperId, Matcher<? super String> messageMatcher) {
+    private void receivesAMessageMatching(String sniperId, Matcher<? super String> messageMatcher) {
         messageListener.receivesAMessage(messageMatcher)
         assertThat(currentChat.getParticipant().asUnescapedString(), equalTo(sniperId))
     }
