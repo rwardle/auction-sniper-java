@@ -6,12 +6,6 @@ public class AppConstants {
     public static final String MAIN_WINDOW_NAME = "Auction Sniper Main";
     public static final String SNIPERS_TABLE_NAME = "snipers table";
 
-    public static final String STATUS_JOINING = "Joining";
-    public static final String STATUS_BIDDING = "Bidding";
-    public static final String STATUS_WINNING = "Winning";
-    public static final String STATUS_LOST = "Lost";
-    public static final String STATUS_WON = "Won";
-
     public static final String XMPP_DOMAIN = "localhost";
     public static final String AUCTION_RESOURCE = "Auction";
     public static final String ITEM_ID_AS_LOGIN = "auction-%s";

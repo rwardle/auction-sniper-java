@@ -1,6 +1,6 @@
 package auctionsniper
 
-import static auctionsniper.AppConstants.*
+import static auctionsniper.ui.SnipersTableModel.textFor
 
 class ApplicationRunner {
 
@@ -33,23 +33,23 @@ class ApplicationRunner {
         thread.start()
 
         driver = new AuctionSniperDriver(1000)
-        driver.showsSniperStatus(STATUS_JOINING)
+        driver.showsSniperStatus("", 0, 0, textFor(SniperState.JOINING))
     }
 
     void hasShownSniperIsBidding(int lastPrice, int lastBid) {
-        driver.showsSniperStatus(itemId, lastPrice, lastBid, STATUS_BIDDING)
+        driver.showsSniperStatus(itemId, lastPrice, lastBid, textFor(SniperState.BIDDING))
     }
 
     void hasShownSniperIsWinning(int winningBid) {
-        driver.showsSniperStatus(itemId, winningBid, winningBid, STATUS_WINNING)
+        driver.showsSniperStatus(itemId, winningBid, winningBid, textFor(SniperState.WINNING))
     }
 
-    void showsSniperHasLostAuction() {
-        driver.showsSniperStatus(STATUS_LOST)
+    void showsSniperHasLostAuction(int lastPrice, int lastBid) {
+        driver.showsSniperStatus(itemId, lastPrice, lastBid, textFor(SniperState.LOST))
     }
 
     void showsSniperHasWonAuction(int lastPrice) {
-        driver.showsSniperStatus(itemId, lastPrice, lastPrice, STATUS_WON)
+        driver.showsSniperStatus(itemId, lastPrice, lastPrice, textFor(SniperState.WON))
     }
 
     void stop() {

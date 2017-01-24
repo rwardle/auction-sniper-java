@@ -23,10 +23,6 @@ class AuctionSniperDriver {
                 .using(BasicRobot.robotWithCurrentAwtHierarchy())
     }
 
-    void showsSniperStatus(String statusText) {
-        showsSniperStatus("", 0, 0, statusText)
-    }
-
     void showsSniperStatus(String itemId, int lastPrice, int lastBid, String statusText) {
         def conditions = [
                 tableCellWithText(row(0).column(0), itemId),

@@ -30,7 +30,7 @@ class AuctionSniperSpec extends Specification {
         auction.announceClosed()
 
         then:
-        application.showsSniperHasLostAuction()
+        application.showsSniperHasLostAuction(0, 0)
     }
 
     def "sniper makes a higher bid but loses"() {
@@ -42,7 +42,7 @@ class AuctionSniperSpec extends Specification {
         auction.announceClosed()
 
         then:
-        application.showsSniperHasLostAuction()
+        application.showsSniperHasLostAuction(1000, 1098)
     }
 
     def "sniper wins an auction by bidding higher"() {

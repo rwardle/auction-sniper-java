@@ -1,18 +1,15 @@
 package test.auctionsniper;
 
-import auctionsniper.Auction;
-import auctionsniper.AuctionSniper;
-import auctionsniper.SniperListener;
-import auctionsniper.SniperState;
+import auctionsniper.*;
 import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
 
 import static auctionsniper.AuctionEventListener.PriceSource.FromOtherBidder;
 import static auctionsniper.AuctionEventListener.PriceSource.FromSniper;
+import static auctionsniper.SniperState.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.*;
-import static test.auctionsniper.AuctionSniperTest.ListenerState.*;
 
 public class AuctionSniperTest {
 
@@ -20,26 +17,26 @@ public class AuctionSniperTest {
 
     private final Auction auction = mock(Auction.class);
     private final SniperListenerSpy sniperListener = spy(new SniperListenerSpy());
-    private final AuctionSniper sniper = new AuctionSniper(auction, ITEM_ID, sniperListener);
+    private final AuctionSniper sniper = new AuctionSniper(ITEM_ID, auction, sniperListener);
 
     @Test
     public void reportsLostWhenAuctionClosesImmediately() {
         sniper.auctionClosed();
 
-        verify(sniperListener, atLeastOnce()).sniperLost();
+        verify(sniperListener, atLeastOnce()).sniperStateChanged(argThat(snapshot -> snapshot.state == LOST));
     }
 
     @Test
     public void reportsLostIfAuctionClosesWhenBidding() {
         doAnswer(invocation -> {
-            verifySniperInState(Bidding, invocation);
+            verifySniperIs(BIDDING, invocation);
             return invocation.callRealMethod();
-        }).when(sniperListener).sniperLost();
+        }).when(sniperListener).sniperStateChanged(argThat(snapshot -> snapshot.state == LOST));
 
         sniper.currentPrice(123, 45, FromOtherBidder);
         sniper.auctionClosed();
 
-        verify(sniperListener, atLeastOnce()).sniperLost();
+        verify(sniperListener, atLeastOnce()).sniperStateChanged(argThat(snapshot -> snapshot.state == LOST));
     }
 
     @Test
@@ -51,61 +48,49 @@ public class AuctionSniperTest {
         sniper.currentPrice(price, increment, FromOtherBidder);
 
         verify(auction).bid(bid);
-        verify(sniperListener, atLeastOnce()).sniperBidding(new SniperState(ITEM_ID, price, bid));
+        verify(sniperListener, atLeastOnce()).sniperStateChanged(
+                new SniperSnapshot(ITEM_ID, price, bid, BIDDING));
     }
 
     @Test
     public void reportsIsWinningWhenCurrentPriceComesFromSniper() {
-        sniper.currentPrice(123, 45, FromSniper);
+        doAnswer(invocation -> {
+            verifySniperIs(BIDDING, invocation);
+            return invocation.callRealMethod();
+        }).when(sniperListener).sniperStateChanged(argThat(snapshot -> snapshot.state == WINNING));
 
-        verifyZeroInteractions(auction);
-        verify(sniperListener, atLeastOnce()).sniperWinning();
+        sniper.currentPrice(123, 12, FromOtherBidder);
+        sniper.currentPrice(135, 45, FromSniper);
+
+        verify(sniperListener, atLeastOnce())
+                .sniperStateChanged(new SniperSnapshot(ITEM_ID, 135, 135, WINNING));
     }
 
     @Test
     public void reportsWonIfAuctionClosesWhenWinning() {
         doAnswer(invocation -> {
-            verifySniperInState(Winning, invocation);
+            verifySniperIs(WINNING, invocation);
             return invocation.callRealMethod();
-        }).when(sniperListener).sniperWon();
+        }).when(sniperListener).sniperStateChanged(argThat(snapshot -> snapshot.state == WON));
 
         sniper.currentPrice(123, 45, FromSniper);
         sniper.auctionClosed();
 
-        verify(sniperListener, atLeastOnce()).sniperWon();
+        verify(sniperListener, atLeastOnce()).sniperStateChanged(argThat(snapshot -> snapshot.state == WON));
     }
 
-    private static void verifySniperInState(ListenerState state, InvocationOnMock invocation) {
+    private static void verifySniperIs(SniperState state, InvocationOnMock invocation) {
         SniperListenerSpy listener = (SniperListenerSpy) invocation.getMock();
         assertThat(listener.state, is(state));
     }
 
-    enum ListenerState {
-        Undefined, Lost, Bidding, Won, Winning
-    }
-
     private static class SniperListenerSpy implements SniperListener {
 
-        ListenerState state = Undefined;
+        SniperState state;
 
         @Override
-        public void sniperLost() {
-            state = Lost;
-        }
-
-        @Override
-        public void sniperBidding(SniperState sniperState) {
-            state = Bidding;
-        }
-
-        @Override
-        public void sniperWinning() {
-            state = Winning;
-        }
-
-        @Override
-        public void sniperWon() {
-            state = Won;
+        public void sniperStateChanged(SniperSnapshot snapshot) {
+            state = snapshot.state;
         }
     }
 }
