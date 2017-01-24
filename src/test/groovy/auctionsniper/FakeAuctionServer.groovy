@@ -20,9 +20,9 @@ class FakeAuctionServer {
 
     def messageListener = new SingleMessageListener()
 
-    String itemId
-    XMPPTCPConnection connection
-    Chat currentChat
+    private String itemId
+    private XMPPTCPConnection connection
+    private Chat currentChat
 
     FakeAuctionServer(String hostname, String itemId) {
         this.itemId = itemId

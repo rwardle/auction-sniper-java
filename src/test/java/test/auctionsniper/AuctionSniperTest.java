@@ -3,6 +3,7 @@ package test.auctionsniper;
 import auctionsniper.Auction;
 import auctionsniper.AuctionSniper;
 import auctionsniper.SniperListener;
+import auctionsniper.SniperState;
 import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
 
@@ -15,9 +16,11 @@ import static test.auctionsniper.AuctionSniperTest.ListenerState.*;
 
 public class AuctionSniperTest {
 
+    private static final String ITEM_ID = "itemId";
+
     private final Auction auction = mock(Auction.class);
     private final SniperListenerSpy sniperListener = spy(new SniperListenerSpy());
-    private final AuctionSniper sniper = new AuctionSniper(auction, sniperListener);
+    private final AuctionSniper sniper = new AuctionSniper(auction, ITEM_ID, sniperListener);
 
     @Test
     public void reportsLostWhenAuctionClosesImmediately() {
@@ -43,11 +46,12 @@ public class AuctionSniperTest {
     public void bidsHigherAndReportsBiddingWhenNewPriceArrives() {
         int price = 1001;
         int increment = 25;
+        int bid = price + increment;
 
         sniper.currentPrice(price, increment, FromOtherBidder);
 
-        verify(auction).bid(price + increment);
-        verify(sniperListener, atLeastOnce()).sniperBidding();
+        verify(auction).bid(bid);
+        verify(sniperListener, atLeastOnce()).sniperBidding(new SniperState(ITEM_ID, price, bid));
     }
 
     @Test
@@ -90,7 +94,7 @@ public class AuctionSniperTest {
         }
 
         @Override
-        public void sniperBidding() {
+        public void sniperBidding(SniperState sniperState) {
             state = Bidding;
         }
 

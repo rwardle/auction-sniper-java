@@ -54,13 +54,13 @@ class AuctionSniperSpec extends Specification {
         auction.reportPrice(1098, 97, SNIPER_XMPP_ID)
 
         then:
-        application.hasShownSniperIsWinning()
+        application.hasShownSniperIsWinning(1098)
 
         when:
         auction.announceClosed()
 
         then:
-        application.showsSniperHasWonAuction()
+        application.showsSniperHasWonAuction(1098)
     }
 
     def sniperJoinsAuction() {
@@ -71,7 +71,9 @@ class AuctionSniperSpec extends Specification {
 
     def sniperReceivesPriceAndBids(int price, int increment, String bidder) {
         auction.reportPrice(price, increment, bidder)
-        application.hasShownSniperIsBidding()
-        auction.hasReceivedBid(1098, SNIPER_XMPP_ID)
+
+        def bid = price + increment
+        application.hasShownSniperIsBidding(price, bid)
+        auction.hasReceivedBid(bid, SNIPER_XMPP_ID)
     }
 }

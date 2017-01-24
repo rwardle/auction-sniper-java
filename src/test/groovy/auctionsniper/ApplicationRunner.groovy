@@ -9,12 +9,15 @@ class ApplicationRunner {
 
     String hostname
     AuctionSniperDriver driver
+    String itemId
 
     ApplicationRunner(String hostname) {
         this.hostname = hostname
     }
 
     void startBiddingIn(FakeAuctionServer auction) {
+        itemId = auction.getItemId()
+
         Thread thread = new Thread("Test Application") {
             @Override
             void run() {
@@ -33,20 +36,20 @@ class ApplicationRunner {
         driver.showsSniperStatus(STATUS_JOINING)
     }
 
-    void hasShownSniperIsBidding() {
-        driver.showsSniperStatus(STATUS_BIDDING)
+    void hasShownSniperIsBidding(int lastPrice, int lastBid) {
+        driver.showsSniperStatus(itemId, lastPrice, lastBid, STATUS_BIDDING)
     }
 
-    void hasShownSniperIsWinning() {
-        driver.showsSniperStatus(STATUS_WINNING)
+    void hasShownSniperIsWinning(int winningBid) {
+        driver.showsSniperStatus(itemId, winningBid, winningBid, STATUS_WINNING)
     }
 
     void showsSniperHasLostAuction() {
         driver.showsSniperStatus(STATUS_LOST)
     }
 
-    void showsSniperHasWonAuction() {
-        driver.showsSniperStatus(STATUS_WON)
+    void showsSniperHasWonAuction(int lastPrice) {
+        driver.showsSniperStatus(itemId, lastPrice, lastPrice, STATUS_WON)
     }
 
     void stop() {

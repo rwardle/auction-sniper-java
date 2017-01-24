@@ -2,8 +2,9 @@ package auctionsniper;
 
 public class AppConstants {
 
+    public static final String APPLICATION_TITLE = "Auction Sniper";
     public static final String MAIN_WINDOW_NAME = "Auction Sniper Main";
-    public static final String SNIPER_STATUS_NAME = "sniper status";
+    public static final String SNIPERS_TABLE_NAME = "snipers table";
 
     public static final String STATUS_JOINING = "Joining";
     public static final String STATUS_BIDDING = "Bidding";
