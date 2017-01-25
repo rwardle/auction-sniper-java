@@ -1,7 +1,6 @@
 package auctionsniper
 
 import org.assertj.swing.core.BasicRobot
-import org.assertj.swing.data.TableCell
 import org.assertj.swing.fixture.FrameFixture
 import org.assertj.swing.timing.Condition
 import org.assertj.swing.timing.Pause
@@ -25,24 +24,23 @@ class AuctionSniperDriver {
 
     void showsSniperStatus(String itemId, int lastPrice, int lastBid, String statusText) {
         def conditions = [
-                tableCellWithText(row(0).column(0), itemId),
-                tableCellWithText(row(0).column(1), lastPrice as String),
-                tableCellWithText(row(0).column(2), lastBid as String),
-                tableCellWithText(row(0).column(3), statusText)
+                columnWithText("Item", itemId),
+                columnWithText("Last Price", lastPrice as String),
+                columnWithText("Last Bid", lastBid as String),
+                columnWithText("State", statusText)
         ] as Condition[]
         Pause.pause(conditions, timeout)
     }
 
-    private Condition tableCellWithText(TableCell tableCell, String text) {
-        def description = String.format(
-                "Snipers table cell [%d, %d] text to be '%s'",
-                tableCell.row, tableCell.column, text)
+    private Condition columnWithText(String columnName, String text) {
+        def description = String.format("Snipers table column '%s' text to be '%s'", columnName, text)
         return new Condition(description) {
             String failedComparisonValue
 
             @Override
             boolean test() {
-                def value = mainFrame.table(SNIPERS_TABLE_NAME).valueAt(tableCell)
+                def table = mainFrame.table(SNIPERS_TABLE_NAME)
+                def value = table.valueAt(row(0).column(table.columnIndexFor(columnName)))
                 if (text == value) {
                     return true
                 } else {

@@ -33,6 +33,13 @@ public class SnipersTableModelTest {
     }
 
     @Test
+    public void setsUpColumnHeadings() {
+        for (Column column : Column.values()) {
+            assertEquals(column.name, model.getColumnName(column.ordinal()));
+        }
+    }
+
+    @Test
     public void setsSniperValuesInColumns() {
         model.sniperStateChanged(new SniperSnapshot("item id", 555, 666, SniperState.BIDDING));
 
