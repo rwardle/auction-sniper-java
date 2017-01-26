@@ -2,6 +2,7 @@ package auctionsniper
 
 import org.assertj.swing.core.BasicRobot
 import org.assertj.swing.fixture.FrameFixture
+import org.assertj.swing.fixture.JTableFixture
 import org.assertj.swing.timing.Condition
 import org.assertj.swing.timing.Pause
 
@@ -23,24 +24,27 @@ class AuctionSniperDriver {
     }
 
     void showsSniperStatus(String itemId, int lastPrice, int lastBid, String statusText) {
+        def table = mainFrame.table(SNIPERS_TABLE_NAME)
+        def row = table.cell(itemId).row()
+
         def conditions = [
-                columnWithText("Item", itemId),
-                columnWithText("Last Price", lastPrice as String),
-                columnWithText("Last Bid", lastBid as String),
-                columnWithText("State", statusText)
+                tableCellWithText(table, row, "Item", itemId),
+                tableCellWithText(table, row, "Last Price", lastPrice as String),
+                tableCellWithText(table, row, "Last Bid", lastBid as String),
+                tableCellWithText(table, row, "State", statusText)
         ] as Condition[]
         Pause.pause(conditions, timeout)
     }
 
-    private Condition columnWithText(String columnName, String text) {
-        def description = String.format("Snipers table column '%s' text to be '%s'", columnName, text)
+    private Condition tableCellWithText(JTableFixture table, int rowIndex, String columnName, String text) {
+        def description = String.format(
+                "Snipers table column '%s' text in row '%d' to be '%s'", columnName, rowIndex, text)
         return new Condition(description) {
             String failedComparisonValue
 
             @Override
             boolean test() {
-                def table = mainFrame.table(SNIPERS_TABLE_NAME)
-                def value = table.valueAt(row(0).column(table.columnIndexFor(columnName)))
+                def value = table.valueAt(row(rowIndex).column(table.columnIndexFor(columnName)))
                 if (text == value) {
                     return true
                 } else {

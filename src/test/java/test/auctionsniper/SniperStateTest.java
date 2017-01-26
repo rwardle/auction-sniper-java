@@ -25,12 +25,12 @@ public class SniperStateTest {
     }
 
     @Test(expected = Defect.class)
-    public void throwsDefectWhenAuctionClosesInLost() {
+    public void throwsDefectIfAuctionClosesInLost() {
         LOST.whenAuctionClosed();
     }
 
     @Test(expected = Defect.class)
-    public void throwsDefectWhenAuctionClosesInWon() {
+    public void throwsDefectIfAuctionClosesInWon() {
         WON.whenAuctionClosed();
     }
 }

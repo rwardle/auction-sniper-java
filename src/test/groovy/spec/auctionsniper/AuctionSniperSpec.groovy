@@ -9,71 +9,115 @@ class AuctionSniperSpec extends Specification {
     static final SNIPER_XMPP_ID = "sniper@localhost/Auction"
 
     FakeAuctionServer auction
+    FakeAuctionServer auction2
     ApplicationRunner application
 
     def setup() {
         def hostname = System.getenv("XMPP_HOSTNAME")
         auction = new FakeAuctionServer(hostname, "item-54321")
+        auction2 = new FakeAuctionServer(hostname, "item-65432")
         application = new ApplicationRunner(hostname)
     }
 
     def cleanup() {
         auction.stop()
+        auction2.stop()
         application.stop()
     }
 
     def "sniper joins auction until auction closes"() {
         given:
-        sniperJoinsAuction()
+        auction.startSellingItem()
+
+        and:
+        application.startBiddingIn(auction)
+        auction.hasReceivedJoinRequestFrom(SNIPER_XMPP_ID)
 
         when:
         auction.announceClosed()
 
         then:
-        application.showsSniperHasLostAuction(0, 0)
+        application.showsSniperHasLostAuction(auction, 0, 0)
     }
 
     def "sniper makes a higher bid but loses"() {
         given:
-        sniperJoinsAuction()
-        sniperReceivesPriceAndBids(1000, 98, "other bidder")
+        auction.startSellingItem()
+
+        and:
+        application.startBiddingIn(auction)
+        auction.hasReceivedJoinRequestFrom(SNIPER_XMPP_ID)
+
+        and:
+        sniperReceivesPriceAndBids(auction, 1000, 98, "other bidder")
 
         when:
         auction.announceClosed()
 
         then:
-        application.showsSniperHasLostAuction(1000, 1098)
+        application.showsSniperHasLostAuction(auction, 1000, 1098)
     }
 
     def "sniper wins an auction by bidding higher"() {
         given:
-        sniperJoinsAuction()
-        sniperReceivesPriceAndBids(1000, 98, "other bidder")
+        auction.startSellingItem()
+
+        and:
+        application.startBiddingIn(auction)
+        auction.hasReceivedJoinRequestFrom(SNIPER_XMPP_ID)
+
+        and:
+        sniperReceivesPriceAndBids(auction, 1000, 98, "other bidder")
 
         when:
         auction.reportPrice(1098, 97, SNIPER_XMPP_ID)
 
         then:
-        application.hasShownSniperIsWinning(1098)
+        application.hasShownSniperIsWinning(auction, 1098)
 
         when:
         auction.announceClosed()
 
         then:
-        application.showsSniperHasWonAuction(1098)
+        application.showsSniperHasWonAuction(auction, 1098)
     }
 
-    def sniperJoinsAuction() {
+    def "sniper bids for multiple items"() {
+        given:
         auction.startSellingItem()
-        application.startBiddingIn(auction)
+        auction2.startSellingItem()
+
+        and:
+        application.startBiddingIn(auction, auction2)
         auction.hasReceivedJoinRequestFrom(SNIPER_XMPP_ID)
+        auction2.hasReceivedJoinRequestFrom(SNIPER_XMPP_ID)
+
+        and:
+        sniperReceivesPriceAndBids(auction, 1000, 98, "other bidder")
+        sniperReceivesPriceAndBids(auction2, 500, 21, "other bidder")
+
+        when:
+        auction.reportPrice(1098, 97, SNIPER_XMPP_ID)
+        auction2.reportPrice(521, 20, SNIPER_XMPP_ID)
+
+        then:
+        application.hasShownSniperIsWinning(auction, 1098)
+        application.hasShownSniperIsWinning(auction2, 521)
+
+        when:
+        auction.announceClosed()
+        auction2.announceClosed()
+
+        then:
+        application.showsSniperHasWonAuction(auction, 1098)
+        application.showsSniperHasWonAuction(auction2, 521)
     }
 
-    def sniperReceivesPriceAndBids(int price, int increment, String bidder) {
-        auction.reportPrice(price, increment, bidder)
+    def sniperReceivesPriceAndBids(FakeAuctionServer currentAuction, int price, int increment, String bidder) {
+        currentAuction.reportPrice(price, increment, bidder)
 
         def bid = price + increment
-        application.hasShownSniperIsBidding(price, bid)
-        auction.hasReceivedBid(bid, SNIPER_XMPP_ID)
+        application.hasShownSniperIsBidding(currentAuction, price, bid)
+        currentAuction.hasReceivedBid(bid, SNIPER_XMPP_ID)
     }
 }
