@@ -19,8 +19,8 @@ class AuctionSniperDriver {
     AuctionSniperDriver(long timeout) {
         this.timeout = timeout
         mainFrame = findFrame(MAIN_WINDOW_NAME)
-                .withTimeout(timeout)
-                .using(BasicRobot.robotWithCurrentAwtHierarchy())
+            .withTimeout(timeout)
+            .using(BasicRobot.robotWithCurrentAwtHierarchy())
     }
 
     void showsSniperStatus(String itemId, int lastPrice, int lastBid, String statusText) {
@@ -28,17 +28,17 @@ class AuctionSniperDriver {
         def row = table.cell(itemId).row()
 
         def conditions = [
-                tableCellWithText(table, row, "Item", itemId),
-                tableCellWithText(table, row, "Last Price", lastPrice as String),
-                tableCellWithText(table, row, "Last Bid", lastBid as String),
-                tableCellWithText(table, row, "State", statusText)
+            tableCellWithText(table, row, "Item", itemId),
+            tableCellWithText(table, row, "Last Price", lastPrice as String),
+            tableCellWithText(table, row, "Last Bid", lastBid as String),
+            tableCellWithText(table, row, "State", statusText)
         ] as Condition[]
         Pause.pause(conditions, timeout)
     }
 
     private Condition tableCellWithText(JTableFixture table, int rowIndex, String columnName, String text) {
         def description = String.format(
-                "Snipers table column '%s' text in row '%d' to be '%s'", columnName, rowIndex, text)
+            "Snipers table column '%s' text in row '%d' to be '%s'", columnName, rowIndex, text)
         return new Condition(description) {
             String failedComparisonValue
 

@@ -61,9 +61,9 @@ public class Main {
 
         Auction auction = new XMPPAuction(chat);
         chat.addMessageListener(
-                new AuctionMessageTranslator(
-                        connection.getUser().asUnescapedString(),
-                        new AuctionSniper(itemId, auction, new SwingThreadSniperListener(snipers))));
+            new AuctionMessageTranslator(
+                connection.getUser().asUnescapedString(),
+                new AuctionSniper(itemId, auction, new SwingThreadSniperListener(snipers))));
         auction.join();
     }
 
@@ -82,11 +82,11 @@ public class Main {
 
     private static XMPPTCPConnection connection(String hostname, String username, String password) throws Exception {
         XMPPTCPConnectionConfiguration config = XMPPTCPConnectionConfiguration.builder()
-                .setHost(hostname)
-                .setXmppDomain(JidCreate.from(XMPP_DOMAIN).asDomainBareJid())
-                .setSecurityMode(ConnectionConfiguration.SecurityMode.disabled)
-//                .setDebuggerEnabled(true)
-                .build();
+            .setHost(hostname)
+            .setXmppDomain(JidCreate.from(XMPP_DOMAIN).asDomainBareJid())
+            .setSecurityMode(ConnectionConfiguration.SecurityMode.disabled)
+//          .setDebuggerEnabled(true)
+            .build();
         XMPPTCPConnection connection = new XMPPTCPConnection(config);
         connection.connect();
         connection.login(username, password, Resourcepart.from(AUCTION_RESOURCE));

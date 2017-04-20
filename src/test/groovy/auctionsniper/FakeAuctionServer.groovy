@@ -28,11 +28,11 @@ class FakeAuctionServer {
         this.itemId = itemId
 
         XMPPTCPConnectionConfiguration config = XMPPTCPConnectionConfiguration.builder()
-                .setHost(hostname)
-                .setXmppDomain(JidCreate.from(XMPP_DOMAIN).asDomainBareJid())
-                .setSecurityMode(ConnectionConfiguration.SecurityMode.disabled)
-//                .setDebuggerEnabled(true)
-                .build()
+            .setHost(hostname)
+            .setXmppDomain(JidCreate.from(XMPP_DOMAIN).asDomainBareJid())
+            .setSecurityMode(ConnectionConfiguration.SecurityMode.disabled)
+//          .setDebuggerEnabled(true)
+            .build()
         connection = new XMPPTCPConnection(config)
     }
 

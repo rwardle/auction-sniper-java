@@ -43,8 +43,8 @@ public class AuctionMessageTranslator implements ChatMessageListener {
 
         private AuctionEvent(String messageBody) {
             fields = Stream.of(messageBody.split(";"))
-                    .map(e -> e.split(":"))
-                    .collect(toMap(p -> p[0].trim(), p -> p[1].trim()));
+                .map(e -> e.split(":"))
+                .collect(toMap(p -> p[0].trim(), p -> p[1].trim()));
         }
 
         String type() {

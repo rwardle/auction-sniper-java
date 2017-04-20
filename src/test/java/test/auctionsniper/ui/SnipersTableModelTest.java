@@ -147,8 +147,7 @@ public class SnipersTableModelTest {
     }
 
     private static Matcher<TableModelEvent> anEventWithType(Integer eventType) {
-        return new FeatureMatcher<TableModelEvent, Integer>(
-                equalTo(eventType), "a type of", "was ") {
+        return new FeatureMatcher<TableModelEvent, Integer>(equalTo(eventType), "a type of", "was ") {
             @Override
             protected Integer featureValueOf(TableModelEvent actual) {
                 return actual.getType();

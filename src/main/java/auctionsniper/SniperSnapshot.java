@@ -22,9 +22,9 @@ public class SniperSnapshot {
         if (o == null || getClass() != o.getClass()) return false;
         SniperSnapshot that = (SniperSnapshot) o;
         return lastPrice == that.lastPrice &&
-                lastBid == that.lastBid &&
-                Objects.equals(itemId, that.itemId) &&
-                state == that.state;
+            lastBid == that.lastBid &&
+            Objects.equals(itemId, that.itemId) &&
+            state == that.state;
     }
 
     @Override

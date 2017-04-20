@@ -49,7 +49,7 @@ public class AuctionSniperTest {
 
         verify(auction).bid(bid);
         verify(sniperListener, atLeastOnce()).sniperStateChanged(
-                new SniperSnapshot(ITEM_ID, price, bid, BIDDING));
+            new SniperSnapshot(ITEM_ID, price, bid, BIDDING));
     }
 
     @Test
@@ -63,7 +63,7 @@ public class AuctionSniperTest {
         sniper.currentPrice(135, 45, FromSniper);
 
         verify(sniperListener, atLeastOnce())
-                .sniperStateChanged(new SniperSnapshot(ITEM_ID, 135, 135, WINNING));
+            .sniperStateChanged(new SniperSnapshot(ITEM_ID, 135, 135, WINNING));
     }
 
     @Test
