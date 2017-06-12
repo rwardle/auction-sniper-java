@@ -2,12 +2,13 @@ package auctionsniper
 
 import org.assertj.swing.core.BasicRobot
 import org.assertj.swing.fixture.FrameFixture
+import org.assertj.swing.fixture.JButtonFixture
 import org.assertj.swing.fixture.JTableFixture
+import org.assertj.swing.fixture.JTextComponentFixture
 import org.assertj.swing.timing.Condition
 import org.assertj.swing.timing.Pause
 
-import static auctionsniper.AppConstants.MAIN_WINDOW_NAME
-import static auctionsniper.AppConstants.SNIPERS_TABLE_NAME
+import static auctionsniper.AppConstants.*
 import static org.assertj.swing.data.TableCell.row
 import static org.assertj.swing.finder.WindowFinder.findFrame
 
@@ -21,6 +22,21 @@ class AuctionSniperDriver {
         mainFrame = findFrame(MAIN_WINDOW_NAME)
             .withTimeout(timeout)
             .using(BasicRobot.robotWithCurrentAwtHierarchy())
+    }
+
+    void startBiddingFor(String itemId) {
+        itemIdField().setText(itemId)
+        bidButton().click()
+    }
+
+    private JTextComponentFixture itemIdField() {
+        def textBox = mainFrame.textBox(NEW_ITEM_ID_FIELD_NAME)
+        textBox.focus()
+        return textBox
+    }
+
+    private JButtonFixture bidButton() {
+        return mainFrame.button(JOIN_BUTTON_NAME)
     }
 
     void showsSniperStatus(String itemId, int lastPrice, int lastBid, String statusText) {

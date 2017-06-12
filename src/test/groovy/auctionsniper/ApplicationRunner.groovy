@@ -15,11 +15,20 @@ class ApplicationRunner {
     }
 
     void startBiddingIn(FakeAuctionServer... auctions) {
+        startSniper()
+        for (FakeAuctionServer auction : auctions) {
+            def itemId = auction.getItemId()
+            driver.startBiddingFor(itemId)
+            driver.showsSniperStatus(itemId, 0, 0, textFor(SniperState.JOINING))
+        }
+    }
+
+    private void startSniper() {
         Thread thread = new Thread("Test Application") {
             @Override
             void run() {
                 try {
-                    def args = [hostname, SNIPER_ID, SNIPER_PASSWORD] + auctions.collect { it.itemId }
+                    def args = [hostname, SNIPER_ID, SNIPER_PASSWORD]
                     Main.main(args as String[])
                 } catch (e) {
                     e.printStackTrace()
@@ -31,9 +40,6 @@ class ApplicationRunner {
         thread.start()
 
         driver = new AuctionSniperDriver(1000)
-        for (FakeAuctionServer auction : auctions) {
-            driver.showsSniperStatus(auction.getItemId(), 0, 0, textFor(SniperState.JOINING))
-        }
     }
 
     void hasShownSniperIsBidding(FakeAuctionServer auction, int lastPrice, int lastBid) {

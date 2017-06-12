@@ -5,6 +5,8 @@ public class AppConstants {
     public static final String APPLICATION_TITLE = "Auction Sniper";
     public static final String MAIN_WINDOW_NAME = "Auction Sniper Main";
     public static final String SNIPERS_TABLE_NAME = "snipers table";
+    public static final String NEW_ITEM_ID_FIELD_NAME = "new item id field";
+    public static final String JOIN_BUTTON_NAME = "join button";
 
     public static final String XMPP_DOMAIN = "localhost";
     public static final String AUCTION_RESOURCE = "Auction";

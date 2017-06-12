@@ -17,7 +17,6 @@ import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static auctionsniper.AppConstants.*;
@@ -49,26 +48,23 @@ public class Main {
         Main main = new Main();
         XMPPTCPConnection connection = connection(args[ARGS_HOSTNAME], args[ARGS_USERNAME], args[ARGS_PASSWORD]);
         main.disconnectWhenUICloses(connection);
-
-        Arrays.stream(args).skip(3).forEach(itemId -> main.joinAuction(connection, itemId));
+        main.addUserRequestListenerFor(connection);
     }
 
-    private void joinAuction(XMPPTCPConnection connection, String itemId) {
-        safelyAddItemToModel(itemId);
+    private void addUserRequestListenerFor(XMPPTCPConnection connection) {
+        ui.addUserRequestListener(itemId -> {
+            snipers.addSniper(SniperSnapshot.joining(itemId));
 
-        Chat chat = ChatManager.getInstanceFor(connection).createChat(auctionId(itemId, connection));
-        notToBeGCd.add(chat);
+            Chat chat = ChatManager.getInstanceFor(connection).createChat(auctionId(itemId, connection));
+            notToBeGCd.add(chat);
 
-        Auction auction = new XMPPAuction(chat);
-        chat.addMessageListener(
-            new AuctionMessageTranslator(
-                connection.getUser().asUnescapedString(),
-                new AuctionSniper(itemId, auction, new SwingThreadSniperListener(snipers))));
-        auction.join();
-    }
-
-    private void safelyAddItemToModel(String itemId) {
-        SwingUtilities.invokeLater(() -> snipers.addSniper(SniperSnapshot.joining(itemId)));
+            Auction auction = new XMPPAuction(chat);
+            chat.addMessageListener(
+                new AuctionMessageTranslator(
+                    connection.getUser().asUnescapedString(),
+                    new AuctionSniper(itemId, auction, new SwingThreadSniperListener(snipers))));
+            auction.join();
+        });
     }
 
     private void disconnectWhenUICloses(XMPPTCPConnection connection) {
