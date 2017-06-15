@@ -1,13 +1,11 @@
 package test.auctionsniper;
 
 import auctionsniper.AuctionEventListener;
-import auctionsniper.AuctionMessageTranslator;
+import auctionsniper.xmpp.AuctionMessageTranslator;
 import org.jivesoftware.smack.chat.Chat;
 import org.jivesoftware.smack.packet.Message;
 import org.junit.Test;
 
-import static auctionsniper.AppConstants.CLOSE_COMMAND_FORMAT;
-import static auctionsniper.AppConstants.PRICE_COMMAND_FORMAT;
 import static auctionsniper.AuctionEventListener.PriceSource.FromOtherBidder;
 import static auctionsniper.AuctionEventListener.PriceSource.FromSniper;
 import static java.lang.String.format;
@@ -15,6 +13,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 public class AuctionMessageTranslatorTest {
+
+    public static final String PRICE_COMMAND_FORMAT = "SOLVersion: 1.1; Event: PRICE; CurrentPrice: %d; Increment: %d; Bidder: %s;";
+    public static final String CLOSE_COMMAND_FORMAT = "SOLVersion: 1.1; Event: CLOSE;";
 
     private static final Chat UNUSED_CHAT = null;
     private static final String SNIPER_ID = "sniperId";

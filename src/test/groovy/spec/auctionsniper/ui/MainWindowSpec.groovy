@@ -14,6 +14,10 @@ class MainWindowSpec extends Specification {
     MainWindow mainWindow = new MainWindow(tableModel)
     AuctionSniperDriver driver = new AuctionSniperDriver(timeout)
 
+    def cleanup() {
+        driver.dispose()
+    }
+
     def "makes user request when join button clicked"() {
         setup:
         def receivedValue = null

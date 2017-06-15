@@ -9,10 +9,14 @@ import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration
 import org.jxmpp.jid.impl.JidCreate
 import org.jxmpp.jid.parts.Resourcepart
 
-import static auctionsniper.AppConstants.*
+import static auctionsniper.xmpp.XMPPAuction.*
+import static auctionsniper.xmpp.XMPPAuctionHouse.AUCTION_RESOURCE
+import static auctionsniper.xmpp.XMPPAuctionHouse.XMPP_DOMAIN
 import static java.lang.String.format
 import static org.hamcrest.CoreMatchers.equalTo
 import static org.junit.Assert.assertThat
+import static test.auctionsniper.AuctionMessageTranslatorTest.CLOSE_COMMAND_FORMAT
+import static test.auctionsniper.AuctionMessageTranslatorTest.PRICE_COMMAND_FORMAT
 
 class FakeAuctionServer {
 

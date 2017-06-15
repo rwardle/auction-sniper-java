@@ -2,16 +2,7 @@ package auctionsniper;
 
 import auctionsniper.ui.MainWindow;
 import auctionsniper.ui.SnipersTableModel;
-import org.jivesoftware.smack.ConnectionConfiguration;
-import org.jivesoftware.smack.XMPPConnection;
-import org.jivesoftware.smack.chat.Chat;
-import org.jivesoftware.smack.chat.ChatManager;
-import org.jivesoftware.smack.tcp.XMPPTCPConnection;
-import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
-import org.jxmpp.jid.EntityJid;
-import org.jxmpp.jid.impl.JidCreate;
-import org.jxmpp.jid.parts.Resourcepart;
-import org.jxmpp.stringprep.XmppStringprepException;
+import auctionsniper.xmpp.XMPPAuctionHouse;
 
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
@@ -19,24 +10,19 @@ import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-import static auctionsniper.AppConstants.*;
-import static java.lang.String.format;
-
 public class Main {
 
     private static final int ARGS_HOSTNAME = 0;
     private static final int ARGS_USERNAME = 1;
     private static final int ARGS_PASSWORD = 2;
 
-    private static final String AUCTION_ID_FORMAT = ITEM_ID_AS_LOGIN + "@%s/" + AUCTION_RESOURCE;
-
     private final SnipersTableModel snipers = new SnipersTableModel();
     private MainWindow ui;
 
     @SuppressWarnings("unused")
-    private List<Chat> notToBeGCd = new ArrayList<>();
+    private List<Auction> notToBeGCd = new ArrayList<>();
 
-    public Main() throws Exception {
+    Main() throws Exception {
         startUserInterface();
     }
 
@@ -46,56 +32,28 @@ public class Main {
 
     public static void main(String... args) throws Exception {
         Main main = new Main();
-        XMPPTCPConnection connection = connection(args[ARGS_HOSTNAME], args[ARGS_USERNAME], args[ARGS_PASSWORD]);
-        main.disconnectWhenUICloses(connection);
-        main.addUserRequestListenerFor(connection);
+        XMPPAuctionHouse auctionHouse = XMPPAuctionHouse.connect(args[ARGS_HOSTNAME], args[ARGS_USERNAME], args[ARGS_PASSWORD]);
+        main.disconnectWhenUICloses(auctionHouse);
+        main.addUserRequestListenerFor(auctionHouse);
     }
 
-    private void addUserRequestListenerFor(XMPPTCPConnection connection) {
+    private void addUserRequestListenerFor(AuctionHouse auctionHouse) {
         ui.addUserRequestListener(itemId -> {
             snipers.addSniper(SniperSnapshot.joining(itemId));
-
-            Chat chat = ChatManager.getInstanceFor(connection).createChat(auctionId(itemId, connection));
-            notToBeGCd.add(chat);
-
-            Auction auction = new XMPPAuction(chat);
-            chat.addMessageListener(
-                new AuctionMessageTranslator(
-                    connection.getUser().asUnescapedString(),
-                    new AuctionSniper(itemId, auction, new SwingThreadSniperListener(snipers))));
+            Auction auction = auctionHouse.auctionFor(itemId);
+            notToBeGCd.add(auction);
+            auction.addAuctionEventListener(new AuctionSniper(itemId, auction, new SwingThreadSniperListener(snipers)));
             auction.join();
         });
     }
 
-    private void disconnectWhenUICloses(XMPPTCPConnection connection) {
+    private void disconnectWhenUICloses(AuctionHouse auctionHouse) {
         ui.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosed(WindowEvent e) {
-                connection.disconnect();
+                auctionHouse.disconnect();
             }
         });
-    }
-
-    private static XMPPTCPConnection connection(String hostname, String username, String password) throws Exception {
-        XMPPTCPConnectionConfiguration config = XMPPTCPConnectionConfiguration.builder()
-            .setHost(hostname)
-            .setXmppDomain(JidCreate.from(XMPP_DOMAIN).asDomainBareJid())
-            .setSecurityMode(ConnectionConfiguration.SecurityMode.disabled)
-//          .setDebuggerEnabled(true)
-            .build();
-        XMPPTCPConnection connection = new XMPPTCPConnection(config);
-        connection.connect();
-        connection.login(username, password, Resourcepart.from(AUCTION_RESOURCE));
-        return connection;
-    }
-
-    private static EntityJid auctionId(String itemId, XMPPConnection connection) {
-        String jid = format(AUCTION_ID_FORMAT, itemId, connection.getServiceName());
-        try {
-            return JidCreate.from(jid).asEntityJidIfPossible();
-        } catch (XmppStringprepException e) {
-            throw new IllegalArgumentException(format("Invalid JID: %s", jid));
-        }
     }
 
     private static class SwingThreadSniperListener implements SniperListener {

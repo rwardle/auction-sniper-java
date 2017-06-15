@@ -4,8 +4,8 @@ import static auctionsniper.ui.SnipersTableModel.textFor
 
 class ApplicationRunner {
 
-    final String SNIPER_ID = "sniper"
-    final String SNIPER_PASSWORD = "sniper"
+    static final String SNIPER_ID = "sniper"
+    static final String SNIPER_PASSWORD = "sniper"
 
     String hostname
     AuctionSniperDriver driver

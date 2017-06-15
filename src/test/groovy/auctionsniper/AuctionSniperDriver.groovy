@@ -8,7 +8,7 @@ import org.assertj.swing.fixture.JTextComponentFixture
 import org.assertj.swing.timing.Condition
 import org.assertj.swing.timing.Pause
 
-import static auctionsniper.AppConstants.*
+import static auctionsniper.ui.MainWindow.*
 import static org.assertj.swing.data.TableCell.row
 import static org.assertj.swing.finder.WindowFinder.findFrame
 

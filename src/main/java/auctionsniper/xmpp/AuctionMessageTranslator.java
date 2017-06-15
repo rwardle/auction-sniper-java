@@ -1,5 +1,6 @@
-package auctionsniper;
+package auctionsniper.xmpp;
 
+import auctionsniper.AuctionEventListener;
 import org.jivesoftware.smack.chat.Chat;
 import org.jivesoftware.smack.chat.ChatMessageListener;
 import org.jivesoftware.smack.packet.Message;
@@ -27,13 +28,11 @@ public class AuctionMessageTranslator implements ChatMessageListener {
     public void processMessage(Chat chat, Message message) {
         AuctionEvent event = AuctionEvent.from(message.getBody());
 
-        switch (event.type()) {
-            case EVENT_TYPE_CLOSE:
-                listener.auctionClosed();
-                break;
-            case EVENT_TYPE_PRICE:
-                listener.currentPrice(event.currentPrice(), event.increment(), event.isFrom(sniperId));
-                break;
+        String eventType = event.type();
+        if (EVENT_TYPE_CLOSE.equals(eventType)) {
+            listener.auctionClosed();
+        } else if (EVENT_TYPE_PRICE.equals(eventType)) {
+            listener.currentPrice(event.currentPrice(), event.increment(), event.isFrom(sniperId));
         }
     }
 

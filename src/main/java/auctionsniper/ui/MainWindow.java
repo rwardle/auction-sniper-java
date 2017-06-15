@@ -5,9 +5,13 @@ import org.jmock.example.announcer.Announcer;
 import javax.swing.*;
 import java.awt.*;
 
-import static auctionsniper.AppConstants.*;
-
 public class MainWindow extends JFrame {
+
+    public static final String APPLICATION_TITLE = "Auction Sniper";
+    public static final String MAIN_WINDOW_NAME = "Auction Sniper Main";
+    public static final String SNIPERS_TABLE_NAME = "snipers table";
+    public static final String NEW_ITEM_ID_FIELD_NAME = "new item id field";
+    public static final String JOIN_BUTTON_NAME = "join button";
 
     private final Announcer<UserRequestListener> userRequests = Announcer.to(UserRequestListener.class);
 
@@ -52,5 +56,4 @@ public class MainWindow extends JFrame {
         snipersTable.setName(SNIPERS_TABLE_NAME);
         return snipersTable;
     }
-
 }

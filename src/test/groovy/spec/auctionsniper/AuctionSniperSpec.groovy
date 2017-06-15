@@ -6,6 +6,7 @@ import spock.lang.Specification
 
 class AuctionSniperSpec extends Specification {
 
+    static final XMPP_HOSTNAME_ENV = "XMPP_HOSTNAME"
     static final SNIPER_XMPP_ID = "sniper@localhost/Auction"
 
     FakeAuctionServer auction
@@ -13,7 +14,7 @@ class AuctionSniperSpec extends Specification {
     ApplicationRunner application
 
     def setup() {
-        def hostname = System.getenv("XMPP_HOSTNAME")
+        def hostname = System.getenv(XMPP_HOSTNAME_ENV)
         auction = new FakeAuctionServer(hostname, "item-54321")
         auction2 = new FakeAuctionServer(hostname, "item-65432")
         application = new ApplicationRunner(hostname)
@@ -26,7 +27,7 @@ class AuctionSniperSpec extends Specification {
     }
 
     def "sniper joins auction until auction closes"() {
-        given:
+        setup:
         auction.startSellingItem()
 
         and:
@@ -41,7 +42,7 @@ class AuctionSniperSpec extends Specification {
     }
 
     def "sniper makes a higher bid but loses"() {
-        given:
+        setup:
         auction.startSellingItem()
 
         and:
@@ -59,7 +60,7 @@ class AuctionSniperSpec extends Specification {
     }
 
     def "sniper wins an auction by bidding higher"() {
-        given:
+        setup:
         auction.startSellingItem()
 
         and:
@@ -83,7 +84,7 @@ class AuctionSniperSpec extends Specification {
     }
 
     def "sniper bids for multiple items"() {
-        given:
+        setup:
         auction.startSellingItem()
         auction2.startSellingItem()
 
