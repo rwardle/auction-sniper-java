@@ -1,6 +1,15 @@
-openfire:
-  image: rwardle/openfire-goos
-  ports:
-    - "9090:9090"
-    - "5222:5222"
-    - "7777:7777"
+version: "2"
+
+services:
+  openfire:
+    image: rwardle/openfire-goos
+    container_name: auctionsniperjava_openfire
+    volumes:
+      - data:/var/lib/openfire
+    ports:
+      - "9090:9090"
+      - "5222:5222"
+      - "7777:7777"
+
+volumes:
+  data:
