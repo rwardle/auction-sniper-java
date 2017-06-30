@@ -1,4 +1,4 @@
-package test.auctionsniper;
+package test.auctionsniper.xmpp;
 
 import auctionsniper.AuctionEventListener;
 import auctionsniper.xmpp.AuctionMessageTranslator;

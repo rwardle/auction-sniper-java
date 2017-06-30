@@ -1,14 +1,11 @@
 package auctionsniper;
 
 import auctionsniper.ui.MainWindow;
-import auctionsniper.ui.SnipersTableModel;
 import auctionsniper.xmpp.XMPPAuctionHouse;
 
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Main {
 
@@ -16,18 +13,15 @@ public class Main {
     private static final int ARGS_USERNAME = 1;
     private static final int ARGS_PASSWORD = 2;
 
-    private final SnipersTableModel snipers = new SnipersTableModel();
+    private final SniperPortfolio portfolio = new SniperPortfolio();
     private MainWindow ui;
-
-    @SuppressWarnings("unused")
-    private List<Auction> notToBeGCd = new ArrayList<>();
 
     Main() throws Exception {
         startUserInterface();
     }
 
     private void startUserInterface() throws Exception {
-        SwingUtilities.invokeAndWait(() -> ui = new MainWindow(snipers));
+        SwingUtilities.invokeAndWait(() -> ui = new MainWindow(portfolio));
     }
 
     public static void main(String... args) throws Exception {
@@ -38,13 +32,7 @@ public class Main {
     }
 
     private void addUserRequestListenerFor(AuctionHouse auctionHouse) {
-        ui.addUserRequestListener(itemId -> {
-            snipers.addSniper(SniperSnapshot.joining(itemId));
-            Auction auction = auctionHouse.auctionFor(itemId);
-            notToBeGCd.add(auction);
-            auction.addAuctionEventListener(new AuctionSniper(itemId, auction, new SwingThreadSniperListener(snipers)));
-            auction.join();
-        });
+        ui.addUserRequestListener(new SniperLauncher(auctionHouse, portfolio));
     }
 
     private void disconnectWhenUICloses(AuctionHouse auctionHouse) {
@@ -54,19 +42,5 @@ public class Main {
                 auctionHouse.disconnect();
             }
         });
-    }
-
-    private static class SwingThreadSniperListener implements SniperListener {
-
-        private final SnipersTableModel snipers;
-
-        SwingThreadSniperListener(SnipersTableModel snipers) {
-            this.snipers = snipers;
-        }
-
-        @Override
-        public void sniperStateChanged(SniperSnapshot sniperSnapshot) {
-            SwingUtilities.invokeLater(() -> snipers.sniperStateChanged(sniperSnapshot));
-        }
     }
 }

@@ -1,6 +1,7 @@
 package test.auctionsniper;
 
 import auctionsniper.*;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
 
@@ -17,7 +18,12 @@ public class AuctionSniperTest {
 
     private final Auction auction = mock(Auction.class);
     private final SniperListenerSpy sniperListener = spy(new SniperListenerSpy());
-    private final AuctionSniper sniper = new AuctionSniper(ITEM_ID, auction, sniperListener);
+    private final AuctionSniper sniper = new AuctionSniper(ITEM_ID, auction);
+
+    @Before
+    public void setup() {
+        sniper.addSniperListener(sniperListener);
+    }
 
     @Test
     public void reportsLostWhenAuctionClosesImmediately() {

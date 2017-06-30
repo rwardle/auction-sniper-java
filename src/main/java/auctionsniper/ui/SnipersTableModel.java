@@ -1,16 +1,14 @@
 package auctionsniper.ui;
 
-import auctionsniper.Defect;
-import auctionsniper.SniperListener;
-import auctionsniper.SniperSnapshot;
-import auctionsniper.SniperState;
+import auctionsniper.*;
 
+import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class SnipersTableModel extends AbstractTableModel implements SniperListener {
+public class SnipersTableModel extends AbstractTableModel implements SniperListener, PortfolioListener {
 
     private static final String[] STATUS_TEXT = {"Joining", "Bidding", "Winning", "Lost", "Won"};
 
@@ -52,13 +50,33 @@ public class SnipersTableModel extends AbstractTableModel implements SniperListe
         throw new Defect("Cannot find match for " + snapshot);
     }
 
-    public void addSniper(SniperSnapshot snapshot) {
+    public static String textFor(SniperState state) {
+        return STATUS_TEXT[state.ordinal()];
+    }
+
+    @Override
+    public void sniperAdded(AuctionSniper sniper) {
+        addSniperSnapshot(sniper.getSnapshot());
+        sniper.addSniperListener(new SwingThreadSniperListener(this));
+    }
+
+    private void addSniperSnapshot(SniperSnapshot snapshot) {
         snapshots.add(snapshot);
         int row = snapshots.size() - 1;
         fireTableRowsInserted(row, row);
     }
 
-    public static String textFor(SniperState state) {
-        return STATUS_TEXT[state.ordinal()];
+    private static class SwingThreadSniperListener implements SniperListener {
+
+        private final SnipersTableModel snipers;
+
+        SwingThreadSniperListener(SnipersTableModel snipers) {
+            this.snipers = snipers;
+        }
+
+        @Override
+        public void sniperStateChanged(SniperSnapshot sniperSnapshot) {
+            SwingUtilities.invokeLater(() -> snipers.sniperStateChanged(sniperSnapshot));
+        }
     }
 }

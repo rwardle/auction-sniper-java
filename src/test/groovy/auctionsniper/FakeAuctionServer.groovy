@@ -15,8 +15,8 @@ import static auctionsniper.xmpp.XMPPAuctionHouse.XMPP_DOMAIN
 import static java.lang.String.format
 import static org.hamcrest.CoreMatchers.equalTo
 import static org.junit.Assert.assertThat
-import static test.auctionsniper.AuctionMessageTranslatorTest.CLOSE_COMMAND_FORMAT
-import static test.auctionsniper.AuctionMessageTranslatorTest.PRICE_COMMAND_FORMAT
+import static test.auctionsniper.xmpp.AuctionMessageTranslatorTest.CLOSE_COMMAND_FORMAT
+import static test.auctionsniper.xmpp.AuctionMessageTranslatorTest.PRICE_COMMAND_FORMAT
 
 class FakeAuctionServer {
 

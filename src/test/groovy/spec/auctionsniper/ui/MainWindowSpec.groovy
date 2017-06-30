@@ -1,8 +1,8 @@
 package spec.auctionsniper.ui
 
 import auctionsniper.AuctionSniperDriver
+import auctionsniper.SniperPortfolio
 import auctionsniper.ui.MainWindow
-import auctionsniper.ui.SnipersTableModel
 import org.assertj.swing.timing.Condition
 import org.assertj.swing.timing.Pause
 import spock.lang.Specification
@@ -10,8 +10,7 @@ import spock.lang.Specification
 class MainWindowSpec extends Specification {
 
     long timeout = 1000
-    SnipersTableModel tableModel = new SnipersTableModel()
-    MainWindow mainWindow = new MainWindow(tableModel)
+    MainWindow mainWindow = new MainWindow(new SniperPortfolio())
     AuctionSniperDriver driver = new AuctionSniperDriver(timeout)
 
     def cleanup() {
