@@ -21,23 +21,23 @@ public abstract class SniperSnapshot {
 
     public abstract SniperState state();
 
-    public SniperSnapshot bidding(int newLastPrice, int newLastBid) {
+    public final SniperSnapshot bidding(int newLastPrice, int newLastBid) {
         return SniperSnapshot.create(itemId(), newLastPrice, newLastBid, SniperState.BIDDING);
     }
 
-    public SniperSnapshot winning(int newLastPrice) {
+    public final SniperSnapshot winning(int newLastPrice) {
         return SniperSnapshot.create(itemId(), newLastPrice, lastBid(), SniperState.WINNING);
     }
 
-    public SniperSnapshot losing(int newLastPrice) {
+    public final SniperSnapshot losing(int newLastPrice) {
         return SniperSnapshot.create(itemId(), newLastPrice, lastBid(), SniperState.LOSING);
     }
 
-    public SniperSnapshot closed() {
+    public final SniperSnapshot closed() {
         return SniperSnapshot.create(itemId(), lastPrice(), lastBid(), state().whenAuctionClosed());
     }
 
-    public boolean isForSameItemAs(SniperSnapshot snapshot) {
+    public final boolean isForSameItemAs(SniperSnapshot snapshot) {
         return itemId().equals(snapshot.itemId());
     }
 }

@@ -13,7 +13,7 @@ public abstract class Item {
 
     public abstract int stopPrice();
 
-    public boolean allowsBid(int bid) {
+    public final boolean allowsBid(int bid) {
         return bid <= stopPrice();
     }
 }
