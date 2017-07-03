@@ -30,7 +30,7 @@ class MainWindowSpec extends Specification {
         Pause.pause(new Condition("join request for 'an item-id'") {
             @Override
             boolean test() {
-                return receivedValue == new Item("an item-id", 789);
+                return receivedValue == Item.create("an item-id", 789);
             }
 
             @Override

@@ -49,7 +49,7 @@ public class SnipersTableModelTest {
 
     @Test
     public void setsSniperValuesInColumns() {
-        AuctionSniper sniper = new AuctionSniper(new Item("item id", UNUSED_STOP_PRICE), UNUSED_AUCTION);
+        AuctionSniper sniper = new AuctionSniper(Item.create("item id", UNUSED_STOP_PRICE), UNUSED_AUCTION);
         SniperSnapshot bidding = sniper.getSnapshot().bidding(555, 666);
 
         model.sniperAdded(sniper);
@@ -86,7 +86,7 @@ public class SnipersTableModelTest {
 
     @Test
     public void notifiersListenersWhenAddingASniper() {
-        AuctionSniper sniper = new AuctionSniper(new Item("item123", UNUSED_STOP_PRICE), UNUSED_AUCTION);
+        AuctionSniper sniper = new AuctionSniper(Item.create("item123", UNUSED_STOP_PRICE), UNUSED_AUCTION);
 
         assertEquals(0, model.getRowCount());
         model.sniperAdded(sniper);
@@ -123,10 +123,10 @@ public class SnipersTableModelTest {
     }
 
     private void assertRowMatchesSnapshot(int rowIndex, SniperSnapshot snapshot) {
-        assertThat(cellValue(rowIndex, Column.ITEM_IDENTIFIER), equalTo(snapshot.itemId));
-        assertThat(cellValue(rowIndex, Column.LAST_PRICE), equalTo(snapshot.lastPrice));
-        assertThat(cellValue(rowIndex, Column.LAST_BID), equalTo(snapshot.lastBid));
-        assertThat(cellValue(rowIndex, Column.SNIPER_STATE), equalTo(SnipersTableModel.textFor(snapshot.state)));
+        assertThat(cellValue(rowIndex, Column.ITEM_IDENTIFIER), equalTo(snapshot.itemId()));
+        assertThat(cellValue(rowIndex, Column.LAST_PRICE), equalTo(snapshot.lastPrice()));
+        assertThat(cellValue(rowIndex, Column.LAST_BID), equalTo(snapshot.lastBid()));
+        assertThat(cellValue(rowIndex, Column.SNIPER_STATE), equalTo(SnipersTableModel.textFor(snapshot.state())));
     }
 
     private Object cellValue(int rowIndex, Column column) {
@@ -135,7 +135,7 @@ public class SnipersTableModelTest {
 
 
     private static AuctionSniper auctionSniperFor(String itemId) {
-        return new AuctionSniper(new Item(itemId, UNUSED_STOP_PRICE), UNUSED_AUCTION);
+        return new AuctionSniper(Item.create(itemId, UNUSED_STOP_PRICE), UNUSED_AUCTION);
     }
 
     private static Matcher<TableModelEvent> anEventInRow(Integer rowIndex) {

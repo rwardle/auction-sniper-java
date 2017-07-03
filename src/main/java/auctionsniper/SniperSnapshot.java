@@ -1,69 +1,43 @@
 package auctionsniper;
 
-import java.util.Objects;
+import com.google.auto.value.AutoValue;
 
-public class SniperSnapshot {
+@AutoValue
+public abstract class SniperSnapshot {
 
-    public final String itemId;
-    public final int lastPrice;
-    public final int lastBid;
-    public final SniperState state;
-
-    public SniperSnapshot(String itemId, int lastPrice, int lastBid, SniperState state) {
-        this.itemId = itemId;
-        this.lastPrice = lastPrice;
-        this.lastBid = lastBid;
-        this.state = state;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        SniperSnapshot that = (SniperSnapshot) o;
-        return lastPrice == that.lastPrice &&
-            lastBid == that.lastBid &&
-            Objects.equals(itemId, that.itemId) &&
-            state == that.state;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(itemId, lastPrice, lastBid, state);
-    }
-
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("SniperSnapshot{");
-        sb.append("itemId='").append(itemId).append('\'');
-        sb.append(", lastPrice=").append(lastPrice);
-        sb.append(", lastBid=").append(lastBid);
-        sb.append(", state=").append(state);
-        sb.append('}');
-        return sb.toString();
-    }
-
-    public SniperSnapshot bidding(int newLastPrice, int newLastBid) {
-        return new SniperSnapshot(itemId, newLastPrice, newLastBid, SniperState.BIDDING);
-    }
-
-    public SniperSnapshot winning(int newLastPrice) {
-        return new SniperSnapshot(itemId, newLastPrice, lastBid, SniperState.WINNING);
-    }
-
-    public SniperSnapshot losing(int newLastPrice) {
-        return new SniperSnapshot(itemId, newLastPrice, lastBid, SniperState.LOSING);
-    }
-
-    public SniperSnapshot closed() {
-        return new SniperSnapshot(itemId, lastPrice, lastBid, state.whenAuctionClosed());
+    public static SniperSnapshot create(String itemId, int lastPrice, int lastBid, SniperState state) {
+        return new AutoValue_SniperSnapshot(itemId, lastPrice, lastBid, state);
     }
 
     public static SniperSnapshot joining(String itemId) {
-        return new SniperSnapshot(itemId, 0, 0, SniperState.JOINING);
+        return SniperSnapshot.create(itemId, 0, 0, SniperState.JOINING);
+    }
+
+    public abstract String itemId();
+
+    public abstract int lastPrice();
+
+    public abstract int lastBid();
+
+    public abstract SniperState state();
+
+    public SniperSnapshot bidding(int newLastPrice, int newLastBid) {
+        return SniperSnapshot.create(itemId(), newLastPrice, newLastBid, SniperState.BIDDING);
+    }
+
+    public SniperSnapshot winning(int newLastPrice) {
+        return SniperSnapshot.create(itemId(), newLastPrice, lastBid(), SniperState.WINNING);
+    }
+
+    public SniperSnapshot losing(int newLastPrice) {
+        return SniperSnapshot.create(itemId(), newLastPrice, lastBid(), SniperState.LOSING);
+    }
+
+    public SniperSnapshot closed() {
+        return SniperSnapshot.create(itemId(), lastPrice(), lastBid(), state().whenAuctionClosed());
     }
 
     public boolean isForSameItemAs(SniperSnapshot snapshot) {
-        return itemId.equals(snapshot.itemId);
+        return itemId().equals(snapshot.itemId());
     }
 }

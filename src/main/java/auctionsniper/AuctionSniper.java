@@ -12,7 +12,7 @@ public class AuctionSniper implements AuctionEventListener {
     public AuctionSniper(Item item, Auction auction) {
         this.item = item;
         this.auction = auction;
-        snapshot = SniperSnapshot.joining(item.identifier);
+        snapshot = SniperSnapshot.joining(item.identifier());
     }
 
     @Override

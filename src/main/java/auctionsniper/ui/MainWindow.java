@@ -58,7 +58,7 @@ public class MainWindow extends JFrame {
         Supplier<String> itemId = itemIdField::getText;
         Supplier<Integer> stopPrice = () -> ((Number) stopPriceField.getValue()).intValue();
         joinAuctionButton.addActionListener(
-            e -> userRequests.announce().joinAuction(new Item(itemId.get(), stopPrice.get())));
+            e -> userRequests.announce().joinAuction(Item.create(itemId.get(), stopPrice.get())));
 
         JPanel controls = new JPanel(new FlowLayout());
         controls.add(new JLabel("Item:"));

@@ -37,7 +37,7 @@ class XMPPAuctionHouseSpec extends Specification {
     def "receives events from auction server after joining"() {
         setup:
         def auctionWasClosed = new CountDownLatch(1)
-        Auction auction = auctionHouse.auctionFor(new Item(auctionServer.getItemId(), 789))
+        Auction auction = auctionHouse.auctionFor(Item.create(auctionServer.getItemId(), 789))
         auction.addAuctionEventListener(auctionClosedListener(auctionWasClosed))
         auction.join()
         auctionServer.hasReceivedJoinRequestFrom(SNIPER_XMPP_ID)

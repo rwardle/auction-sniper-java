@@ -11,7 +11,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 public class ColumnTest {
 
-    private final SniperSnapshot snapshot = new SniperSnapshot("itemId", 100, 112, SniperState.LOST);
+    private final SniperSnapshot snapshot = SniperSnapshot.create("itemId", 100, 112, SniperState.LOST);
 
     @Test
     public void itemIdentifierAtIndex0() {

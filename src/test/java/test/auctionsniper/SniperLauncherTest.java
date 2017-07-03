@@ -22,7 +22,7 @@ public class SniperLauncherTest {
 
     @Test
     public void addsSniperToCollectorAndThenJoinsAuction() {
-        Item item = new Item("item 123", UNUSED_STOP_PRICE);
+        Item item = Item.create("item 123", UNUSED_STOP_PRICE);
 
         when(auctionHouse.auctionFor(item)).thenReturn(auction);
         doAnswer(invocation -> {
@@ -49,12 +49,12 @@ public class SniperLauncherTest {
         return new TypeSafeDiagnosingMatcher<AuctionSniper>() {
             @Override
             protected boolean matchesSafely(AuctionSniper sniper, Description mismatchDescription) {
-                return sniper.getSnapshot().isForSameItemAs(SniperSnapshot.joining(item.identifier));
+                return sniper.getSnapshot().isForSameItemAs(SniperSnapshot.joining(item.identifier()));
             }
 
             @Override
             public void describeTo(Description description) {
-                description.appendText("a sniper for item ").appendText(item.identifier);
+                description.appendText("a sniper for item ").appendText(item.identifier());
             }
         };
     }

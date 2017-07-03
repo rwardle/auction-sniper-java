@@ -18,7 +18,7 @@ public class AuctionSniperTest {
 
     private final Auction auction = mock(Auction.class);
     private final SniperListenerSpy sniperListener = spy(new SniperListenerSpy());
-    private final AuctionSniper sniper = new AuctionSniper(new Item(ITEM_ID, 1234), auction);
+    private final AuctionSniper sniper = new AuctionSniper(Item.create(ITEM_ID, 1234), auction);
 
     @Before
     public void setup() {
@@ -29,7 +29,7 @@ public class AuctionSniperTest {
     public void reportsLostWhenAuctionClosesImmediately() {
         sniper.auctionClosed();
 
-        verify(sniperListener, atLeastOnce()).sniperStateChanged(argThat(snapshot -> snapshot.state == LOST));
+        verify(sniperListener, atLeastOnce()).sniperStateChanged(argThat(snapshot -> snapshot.state() == LOST));
     }
 
     @Test
@@ -37,12 +37,12 @@ public class AuctionSniperTest {
         doAnswer(invocation -> {
             verifySniperIs(BIDDING, invocation);
             return invocation.callRealMethod();
-        }).when(sniperListener).sniperStateChanged(argThat(snapshot -> snapshot.state == LOST));
+        }).when(sniperListener).sniperStateChanged(argThat(snapshot -> snapshot.state() == LOST));
 
         sniper.currentPrice(123, 45, FromOtherBidder);
         sniper.auctionClosed();
 
-        verify(sniperListener, atLeastOnce()).sniperStateChanged(argThat(snapshot -> snapshot.state == LOST));
+        verify(sniperListener, atLeastOnce()).sniperStateChanged(argThat(snapshot -> snapshot.state() == LOST));
     }
 
     @Test
@@ -55,7 +55,7 @@ public class AuctionSniperTest {
 
         verify(auction).bid(bid);
         verify(sniperListener, atLeastOnce()).sniperStateChanged(
-            new SniperSnapshot(ITEM_ID, price, bid, BIDDING));
+            SniperSnapshot.create(ITEM_ID, price, bid, BIDDING));
     }
 
     @Test
@@ -63,13 +63,13 @@ public class AuctionSniperTest {
         doAnswer(invocation -> {
             verifySniperIs(BIDDING, invocation);
             return invocation.callRealMethod();
-        }).when(sniperListener).sniperStateChanged(argThat(snapshot -> snapshot.state == WINNING));
+        }).when(sniperListener).sniperStateChanged(argThat(snapshot -> snapshot.state() == WINNING));
 
         sniper.currentPrice(123, 12, FromOtherBidder);
         sniper.currentPrice(135, 45, FromSniper);
 
         verify(sniperListener, atLeastOnce())
-            .sniperStateChanged(new SniperSnapshot(ITEM_ID, 135, 135, WINNING));
+            .sniperStateChanged(SniperSnapshot.create(ITEM_ID, 135, 135, WINNING));
     }
 
     @Test
@@ -77,12 +77,12 @@ public class AuctionSniperTest {
         doAnswer(invocation -> {
             verifySniperIs(WINNING, invocation);
             return invocation.callRealMethod();
-        }).when(sniperListener).sniperStateChanged(argThat(snapshot -> snapshot.state == WON));
+        }).when(sniperListener).sniperStateChanged(argThat(snapshot -> snapshot.state() == WON));
 
         sniper.currentPrice(123, 45, FromSniper);
         sniper.auctionClosed();
 
-        verify(sniperListener, atLeastOnce()).sniperStateChanged(argThat(snapshot -> snapshot.state == WON));
+        verify(sniperListener, atLeastOnce()).sniperStateChanged(argThat(snapshot -> snapshot.state() == WON));
     }
 
     @Test
@@ -92,7 +92,7 @@ public class AuctionSniperTest {
 
         int bid = 123 + 45;
         verify(auction).bid(bid);
-        verify(sniperListener, atLeastOnce()).sniperStateChanged(new SniperSnapshot(ITEM_ID, 2345, bid, LOSING));
+        verify(sniperListener, atLeastOnce()).sniperStateChanged(SniperSnapshot.create(ITEM_ID, 2345, bid, LOSING));
     }
 
     @Test
@@ -100,7 +100,7 @@ public class AuctionSniperTest {
         sniper.currentPrice(2345, 25, FromOtherBidder);
 
         verify(auction, never()).bid(anyInt());
-        verify(sniperListener, atLeastOnce()).sniperStateChanged(new SniperSnapshot(ITEM_ID, 2345, 0, LOSING));
+        verify(sniperListener, atLeastOnce()).sniperStateChanged(SniperSnapshot.create(ITEM_ID, 2345, 0, LOSING));
     }
 
     @Test
@@ -108,12 +108,12 @@ public class AuctionSniperTest {
         doAnswer(invocation -> {
             verifySniperIs(LOSING, invocation);
             return invocation.callRealMethod();
-        }).when(sniperListener).sniperStateChanged(argThat(snapshot -> snapshot.state == LOST));
+        }).when(sniperListener).sniperStateChanged(argThat(snapshot -> snapshot.state() == LOST));
 
         sniper.currentPrice(2345, 25, FromOtherBidder);
         sniper.auctionClosed();
 
-        verify(sniperListener, atLeastOnce()).sniperStateChanged(argThat(snapshot -> snapshot.state == LOST));
+        verify(sniperListener, atLeastOnce()).sniperStateChanged(argThat(snapshot -> snapshot.state() == LOST));
     }
 
     @Test
@@ -121,7 +121,7 @@ public class AuctionSniperTest {
         sniper.currentPrice(2345, 25, FromOtherBidder);
         sniper.currentPrice(3456, 25, FromOtherBidder);
 
-        verify(sniperListener, atLeastOnce()).sniperStateChanged(new SniperSnapshot(ITEM_ID, 3456, 0, LOSING));
+        verify(sniperListener, atLeastOnce()).sniperStateChanged(SniperSnapshot.create(ITEM_ID, 3456, 0, LOSING));
     }
 
     @Test
@@ -132,9 +132,9 @@ public class AuctionSniperTest {
 
         verify(auction).bid(135);
         verify(sniperListener, atLeastOnce())
-            .sniperStateChanged(new SniperSnapshot(ITEM_ID, 135, 135, WINNING));
+            .sniperStateChanged(SniperSnapshot.create(ITEM_ID, 135, 135, WINNING));
         verify(sniperListener, atLeastOnce())
-            .sniperStateChanged(new SniperSnapshot(ITEM_ID, 2345, 135, LOSING));
+            .sniperStateChanged(SniperSnapshot.create(ITEM_ID, 2345, 135, LOSING));
     }
 
     private static void verifySniperIs(SniperState state, InvocationOnMock invocation) {
@@ -148,7 +148,7 @@ public class AuctionSniperTest {
 
         @Override
         public void sniperStateChanged(SniperSnapshot snapshot) {
-            state = snapshot.state;
+            state = snapshot.state();
         }
     }
 }
