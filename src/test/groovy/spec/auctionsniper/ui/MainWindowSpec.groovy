@@ -1,6 +1,7 @@
 package spec.auctionsniper.ui
 
 import auctionsniper.AuctionSniperDriver
+import auctionsniper.Item
 import auctionsniper.SniperPortfolio
 import auctionsniper.ui.MainWindow
 import org.assertj.swing.timing.Condition
@@ -20,16 +21,16 @@ class MainWindowSpec extends Specification {
     def "makes user request when join button clicked"() {
         setup:
         def receivedValue = null
-        mainWindow.addUserRequestListener({ itemId -> receivedValue = itemId })
+        mainWindow.addUserRequestListener({ item -> receivedValue = item })
 
         when:
-        driver.startBiddingFor("an item-id")
+        driver.startBiddingFor("an item-id", 789)
 
         then:
         Pause.pause(new Condition("join request for 'an item-id'") {
             @Override
             boolean test() {
-                return receivedValue == "an item-id"
+                return receivedValue == new Item("an item-id", 789);
             }
 
             @Override

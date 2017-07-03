@@ -2,6 +2,7 @@ package auctionsniper.xmpp;
 
 import auctionsniper.Auction;
 import auctionsniper.AuctionHouse;
+import auctionsniper.Item;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
@@ -24,8 +25,8 @@ public class XMPPAuctionHouse implements AuctionHouse {
     }
 
     @Override
-    public Auction auctionFor(String itemId) {
-        return new XMPPAuction(connection, itemId);
+    public Auction auctionFor(Item item) {
+        return new XMPPAuction(connection, item.identifier);
     }
 
     @Override

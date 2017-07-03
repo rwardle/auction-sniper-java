@@ -114,6 +114,36 @@ class AuctionSniperSpec extends Specification {
         application.showsSniperHasWonAuction(auction2, 521)
     }
 
+    def "sniper loses an auction when the price is too high"() {
+        setup:
+        auction.startSellingItem()
+
+        and:
+        application.startBiddingWithStopPrice(auction, 1100)
+        auction.hasReceivedJoinRequestFrom(SNIPER_XMPP_ID)
+
+        and:
+        sniperReceivesPriceAndBids(auction, 1000, 98, "other bidder")
+
+        when:
+        auction.reportPrice(1197, 10, "third party")
+
+        then:
+        application.hasShownSniperIsLosing(auction, 1197, 1098)
+
+        when:
+        auction.reportPrice(1207, 10, "fourth party")
+
+        then:
+        application.hasShownSniperIsLosing(auction, 1207, 1098)
+
+        when:
+        auction.announceClosed()
+
+        then:
+        application.showsSniperHasLostAuction(auction, 1207, 1098)
+    }
+
     def sniperReceivesPriceAndBids(FakeAuctionServer currentAuction, int price, int increment, String bidder) {
         currentAuction.reportPrice(price, increment, bidder)
 

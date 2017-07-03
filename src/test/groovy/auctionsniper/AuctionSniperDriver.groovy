@@ -24,13 +24,20 @@ class AuctionSniperDriver {
             .using(BasicRobot.robotWithCurrentAwtHierarchy())
     }
 
-    void startBiddingFor(String itemId) {
+    void startBiddingFor(String itemId, int stopPrice) {
         itemIdField().setText(itemId)
+        stopPriceField().setText(String.valueOf(stopPrice))
         bidButton().click()
     }
 
     private JTextComponentFixture itemIdField() {
         def textBox = mainFrame.textBox(NEW_ITEM_ID_FIELD_NAME)
+        textBox.focus()
+        return textBox
+    }
+
+    private JTextComponentFixture stopPriceField() {
+        def textBox = mainFrame.textBox(STOP_PRICE_FIELD_NAME)
         textBox.focus()
         return textBox
     }

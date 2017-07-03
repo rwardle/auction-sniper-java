@@ -3,6 +3,7 @@ package spec.auctionsniper.xmpp
 import auctionsniper.Auction
 import auctionsniper.AuctionEventListener
 import auctionsniper.FakeAuctionServer
+import auctionsniper.Item
 import auctionsniper.xmpp.XMPPAuctionHouse
 import spock.lang.Specification
 
@@ -36,7 +37,7 @@ class XMPPAuctionHouseSpec extends Specification {
     def "receives events from auction server after joining"() {
         setup:
         def auctionWasClosed = new CountDownLatch(1)
-        Auction auction = auctionHouse.auctionFor(auctionServer.getItemId())
+        Auction auction = auctionHouse.auctionFor(new Item(auctionServer.getItemId(), 789))
         auction.addAuctionEventListener(auctionClosedListener(auctionWasClosed))
         auction.join()
         auctionServer.hasReceivedJoinRequestFrom(SNIPER_XMPP_ID)

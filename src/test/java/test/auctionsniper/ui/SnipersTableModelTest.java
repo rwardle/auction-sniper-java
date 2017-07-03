@@ -25,6 +25,7 @@ import static test.auctionsniper.CustomMatchers.with;
 public class SnipersTableModelTest {
 
     private static final Auction UNUSED_AUCTION = null;
+    private static final int UNUSED_STOP_PRICE = Integer.MAX_VALUE;
 
     private TableModelListener listener = mock(TableModelListener.class);
     private final SnipersTableModel model = new SnipersTableModel();
@@ -48,7 +49,7 @@ public class SnipersTableModelTest {
 
     @Test
     public void setsSniperValuesInColumns() {
-        AuctionSniper sniper = new AuctionSniper("item id", UNUSED_AUCTION);
+        AuctionSniper sniper = new AuctionSniper(new Item("item id", UNUSED_STOP_PRICE), UNUSED_AUCTION);
         SniperSnapshot bidding = sniper.getSnapshot().bidding(555, 666);
 
         model.sniperAdded(sniper);
@@ -85,7 +86,7 @@ public class SnipersTableModelTest {
 
     @Test
     public void notifiersListenersWhenAddingASniper() {
-        AuctionSniper sniper = new AuctionSniper("item123", UNUSED_AUCTION);
+        AuctionSniper sniper = new AuctionSniper(new Item("item123", UNUSED_STOP_PRICE), UNUSED_AUCTION);
 
         assertEquals(0, model.getRowCount());
         model.sniperAdded(sniper);
@@ -97,8 +98,8 @@ public class SnipersTableModelTest {
 
     @Test
     public void holdsSnipersInAdditionOrder() {
-        model.sniperAdded(new AuctionSniper("item 0", UNUSED_AUCTION));
-        model.sniperAdded(new AuctionSniper("item 1", UNUSED_AUCTION));
+        model.sniperAdded(auctionSniperFor("item 0"));
+        model.sniperAdded(auctionSniperFor("item 1"));
 
         assertThat(cellValue(0, Column.ITEM_IDENTIFIER), equalTo("item 0"));
         assertThat(cellValue(1, Column.ITEM_IDENTIFIER), equalTo("item 1"));
@@ -106,10 +107,10 @@ public class SnipersTableModelTest {
 
     @Test
     public void updatesCorrectRowForSniper() {
-        AuctionSniper sniper = new AuctionSniper("item 1", UNUSED_AUCTION);
+        AuctionSniper sniper = auctionSniperFor("item 1");
         SniperSnapshot bidding = sniper.getSnapshot().bidding(555, 666);
 
-        model.sniperAdded(new AuctionSniper("item 0", UNUSED_AUCTION));
+        model.sniperAdded(auctionSniperFor("item 0"));
         model.sniperAdded(sniper);
         model.sniperStateChanged(bidding);
 
@@ -130,6 +131,11 @@ public class SnipersTableModelTest {
 
     private Object cellValue(int rowIndex, Column column) {
         return model.getValueAt(rowIndex, column.ordinal());
+    }
+
+
+    private static AuctionSniper auctionSniperFor(String itemId) {
+        return new AuctionSniper(new Item(itemId, UNUSED_STOP_PRICE), UNUSED_AUCTION);
     }
 
     private static Matcher<TableModelEvent> anEventInRow(Integer rowIndex) {

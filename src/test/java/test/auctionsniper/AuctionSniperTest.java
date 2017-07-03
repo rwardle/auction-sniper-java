@@ -18,7 +18,7 @@ public class AuctionSniperTest {
 
     private final Auction auction = mock(Auction.class);
     private final SniperListenerSpy sniperListener = spy(new SniperListenerSpy());
-    private final AuctionSniper sniper = new AuctionSniper(ITEM_ID, auction);
+    private final AuctionSniper sniper = new AuctionSniper(new Item(ITEM_ID, 1234), auction);
 
     @Before
     public void setup() {
@@ -83,6 +83,58 @@ public class AuctionSniperTest {
         sniper.auctionClosed();
 
         verify(sniperListener, atLeastOnce()).sniperStateChanged(argThat(snapshot -> snapshot.state == WON));
+    }
+
+    @Test
+    public void doesNotBidAndReportsLosingIfSubsequentPriceIsAboveStopPrice() {
+        sniper.currentPrice(123, 45, FromOtherBidder);
+        sniper.currentPrice(2345, 25, FromOtherBidder);
+
+        int bid = 123 + 45;
+        verify(auction).bid(bid);
+        verify(sniperListener, atLeastOnce()).sniperStateChanged(new SniperSnapshot(ITEM_ID, 2345, bid, LOSING));
+    }
+
+    @Test
+    public void doesNotBidAndReportsLosingIfFirstPriceIsAboveStopPrice() {
+        sniper.currentPrice(2345, 25, FromOtherBidder);
+
+        verify(auction, never()).bid(anyInt());
+        verify(sniperListener, atLeastOnce()).sniperStateChanged(new SniperSnapshot(ITEM_ID, 2345, 0, LOSING));
+    }
+
+    @Test
+    public void reportsLostIfAuctionClosesWhenLosing() {
+        doAnswer(invocation -> {
+            verifySniperIs(LOSING, invocation);
+            return invocation.callRealMethod();
+        }).when(sniperListener).sniperStateChanged(argThat(snapshot -> snapshot.state == LOST));
+
+        sniper.currentPrice(2345, 25, FromOtherBidder);
+        sniper.auctionClosed();
+
+        verify(sniperListener, atLeastOnce()).sniperStateChanged(argThat(snapshot -> snapshot.state == LOST));
+    }
+
+    @Test
+    public void continuesToBeLosingOnceStopPriceHasBeenReached() {
+        sniper.currentPrice(2345, 25, FromOtherBidder);
+        sniper.currentPrice(3456, 25, FromOtherBidder);
+
+        verify(sniperListener, atLeastOnce()).sniperStateChanged(new SniperSnapshot(ITEM_ID, 3456, 0, LOSING));
+    }
+
+    @Test
+    public void doesNotBidAndReportsLosingIfPriceAfterWinningIsAboveStopPrice() {
+        sniper.currentPrice(123, 12, FromOtherBidder);
+        sniper.currentPrice(135, 45, FromSniper);
+        sniper.currentPrice(2345, 25, FromOtherBidder);
+
+        verify(auction).bid(135);
+        verify(sniperListener, atLeastOnce())
+            .sniperStateChanged(new SniperSnapshot(ITEM_ID, 135, 135, WINNING));
+        verify(sniperListener, atLeastOnce())
+            .sniperStateChanged(new SniperSnapshot(ITEM_ID, 2345, 135, LOSING));
     }
 
     private static void verifySniperIs(SniperState state, InvocationOnMock invocation) {

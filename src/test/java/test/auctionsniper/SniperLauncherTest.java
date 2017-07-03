@@ -13,6 +13,8 @@ import static test.auctionsniper.CustomMatchers.with;
 
 public class SniperLauncherTest {
 
+    private static final int UNUSED_STOP_PRICE = Integer.MAX_VALUE;
+
     private final AuctionHouse auctionHouse = mock(AuctionHouse.class);
     private final AuctionSpy auction = spy(new AuctionSpy());
     private final SniperCollector sniperCollector = mock(SniperCollector.class);
@@ -20,9 +22,9 @@ public class SniperLauncherTest {
 
     @Test
     public void addsSniperToCollectorAndThenJoinsAuction() {
-        String itemId = "item 123";
+        Item item = new Item("item 123", UNUSED_STOP_PRICE);
 
-        when(auctionHouse.auctionFor(itemId)).thenReturn(auction);
+        when(auctionHouse.auctionFor(item)).thenReturn(auction);
         doAnswer(invocation -> {
             verifyAuctionIs("not joined", invocation.getMock());
             return invocation.callRealMethod();
@@ -32,27 +34,27 @@ public class SniperLauncherTest {
             return null;
         }).when(sniperCollector).addSniper(any());
 
-        launcher.joinAuction(itemId);
+        launcher.joinAuction(item);
 
         verifyAuctionIs("joined", auction);
-        verify(auction).addAuctionEventListener(with(sniperForItem(itemId)));
-        verify(sniperCollector).addSniper(with(sniperForItem(itemId)));
+        verify(auction).addAuctionEventListener(with(sniperForItem(item)));
+        verify(sniperCollector).addSniper(with(sniperForItem(item)));
     }
 
     private static void verifyAuctionIs(String state, Object auction) {
         assertThat(((AuctionSpy) auction).state, is(state));
     }
 
-    private static Matcher<AuctionSniper> sniperForItem(String itemId) {
+    private static Matcher<AuctionSniper> sniperForItem(Item item) {
         return new TypeSafeDiagnosingMatcher<AuctionSniper>() {
             @Override
-            protected boolean matchesSafely(AuctionSniper item, Description mismatchDescription) {
-                return item.getSnapshot().isForSameItemAs(SniperSnapshot.joining(itemId));
+            protected boolean matchesSafely(AuctionSniper sniper, Description mismatchDescription) {
+                return sniper.getSnapshot().isForSameItemAs(SniperSnapshot.joining(item.identifier));
             }
 
             @Override
             public void describeTo(Description description) {
-                description.appendText("a sniper for item ").appendText(itemId);
+                description.appendText("a sniper for item ").appendText(item.identifier);
             }
         };
     }

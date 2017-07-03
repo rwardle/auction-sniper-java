@@ -5,13 +5,14 @@ import org.jmock.example.announcer.Announcer;
 public class AuctionSniper implements AuctionEventListener {
 
     private final Announcer<SniperListener> listeners = Announcer.to(SniperListener.class);
+    private final Item item;
     private final Auction auction;
     private SniperSnapshot snapshot;
-    private boolean isWinning = false;
 
-    public AuctionSniper(String itemId, Auction auction) {
+    public AuctionSniper(Item item, Auction auction) {
+        this.item = item;
         this.auction = auction;
-        snapshot = SniperSnapshot.joining(itemId);
+        snapshot = SniperSnapshot.joining(item.identifier);
     }
 
     @Override
@@ -22,14 +23,21 @@ public class AuctionSniper implements AuctionEventListener {
 
     @Override
     public void currentPrice(int price, int increment, PriceSource priceSource) {
-        isWinning = priceSource == PriceSource.FromSniper;
-        if (isWinning) {
-            snapshot = snapshot.winning(price);
-        } else {
-            int bid = price + increment;
-            auction.bid(bid);
-            snapshot = snapshot.bidding(price, bid);
+        switch (priceSource) {
+            case FromSniper:
+                snapshot = snapshot.winning(price);
+                break;
+            case FromOtherBidder:
+                int bid = price + increment;
+                if (item.allowsBid(bid)) {
+                    auction.bid(bid);
+                    snapshot = snapshot.bidding(price, bid);
+                } else {
+                    snapshot = snapshot.losing(price);
+                }
+                break;
         }
+
         notifyChange();
     }
 

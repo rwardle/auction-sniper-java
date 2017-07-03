@@ -1,11 +1,14 @@
 package auctionsniper.ui;
 
+import auctionsniper.Item;
 import auctionsniper.SniperPortfolio;
 import auctionsniper.UserRequestListener;
 import org.jmock.example.announcer.Announcer;
 
 import javax.swing.*;
 import java.awt.*;
+import java.text.NumberFormat;
+import java.util.function.Supplier;
 
 public class MainWindow extends JFrame {
 
@@ -13,6 +16,7 @@ public class MainWindow extends JFrame {
     public static final String MAIN_WINDOW_NAME = "Auction Sniper Main";
     public static final String SNIPERS_TABLE_NAME = "snipers table";
     public static final String NEW_ITEM_ID_FIELD_NAME = "new item id field";
+    public static final String STOP_PRICE_FIELD_NAME = "stop price field";
     public static final String JOIN_BUTTON_NAME = "join button";
 
     private final Announcer<UserRequestListener> userRequests = Announcer.to(UserRequestListener.class);
@@ -39,15 +43,28 @@ public class MainWindow extends JFrame {
 
     private JPanel makeControls() {
         JTextField itemIdField = new JTextField();
-        itemIdField.setColumns(25);
+        itemIdField.setColumns(20);
         itemIdField.setName(NEW_ITEM_ID_FIELD_NAME);
+
+        NumberFormat numberFormat = NumberFormat.getNumberInstance();
+        numberFormat.setGroupingUsed(false);
+        JFormattedTextField stopPriceField = new JFormattedTextField(numberFormat);
+        stopPriceField.setColumns(20);
+        stopPriceField.setName(STOP_PRICE_FIELD_NAME);
 
         JButton joinAuctionButton = new JButton("Join Auction");
         joinAuctionButton.setName(JOIN_BUTTON_NAME);
-        joinAuctionButton.addActionListener(e -> userRequests.announce().joinAuction(itemIdField.getText()));
+
+        Supplier<String> itemId = itemIdField::getText;
+        Supplier<Integer> stopPrice = () -> ((Number) stopPriceField.getValue()).intValue();
+        joinAuctionButton.addActionListener(
+            e -> userRequests.announce().joinAuction(new Item(itemId.get(), stopPrice.get())));
 
         JPanel controls = new JPanel(new FlowLayout());
+        controls.add(new JLabel("Item:"));
         controls.add(itemIdField);
+        controls.add(new JLabel("Stop price:"));
+        controls.add(stopPriceField);
         controls.add(joinAuctionButton);
 
         return controls;
