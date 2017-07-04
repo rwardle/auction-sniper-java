@@ -57,6 +57,11 @@ class XMPPAuctionHouseSpec extends Specification {
             }
 
             @Override
+            void auctionFailed() {
+                // no-op
+            }
+
+            @Override
             void currentPrice(int price, int increment, AuctionEventListener.PriceSource priceSource) {
                 // no-op
             }

@@ -37,6 +37,10 @@ public abstract class SniperSnapshot {
         return SniperSnapshot.create(itemId(), lastPrice(), lastBid(), state().whenAuctionClosed());
     }
 
+    public final SniperSnapshot failed() {
+        return SniperSnapshot.create(itemId(), 0, 0, SniperState.FAILED);
+    }
+
     public final boolean isForSameItemAs(SniperSnapshot snapshot) {
         return itemId().equals(snapshot.itemId());
     }

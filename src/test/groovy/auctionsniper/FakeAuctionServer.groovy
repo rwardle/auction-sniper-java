@@ -78,4 +78,8 @@ class FakeAuctionServer {
     String getItemId() {
         return itemId
     }
+
+    void sendInvalidMessageContaining(String message) {
+        currentChat.sendMessage(message)
+    }
 }

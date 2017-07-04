@@ -46,6 +46,20 @@ public class AuctionSniperTest {
     }
 
     @Test
+    public void reportsFailedIfAuctionFailsWhenBidding() {
+        doAnswer(invocation -> {
+            verifySniperIs(BIDDING, invocation);
+            return invocation.callRealMethod();
+        }).when(sniperListener).sniperStateChanged(argThat(snapshot -> snapshot.state() == FAILED));
+
+        sniper.currentPrice(123, 45, FromOtherBidder);
+        sniper.auctionFailed();
+
+        verify(sniperListener, atLeastOnce()).sniperStateChanged(
+            SniperSnapshot.create(ITEM_ID, 0, 0, FAILED));
+    }
+
+    @Test
     public void bidsHigherAndReportsBiddingWhenNewPriceArrives() {
         int price = 1001;
         int increment = 25;

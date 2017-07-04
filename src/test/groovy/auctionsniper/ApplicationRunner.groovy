@@ -1,5 +1,7 @@
 package auctionsniper
 
+import org.hamcrest.CoreMatchers
+
 import static auctionsniper.ui.SnipersTableModel.textFor
 
 class ApplicationRunner {
@@ -7,6 +9,7 @@ class ApplicationRunner {
     static final String SNIPER_ID = "sniper"
     static final String SNIPER_PASSWORD = "sniper"
 
+    AuctionLogDriver logDriver = new AuctionLogDriver()
     String hostname
     AuctionSniperDriver driver
 
@@ -31,6 +34,7 @@ class ApplicationRunner {
     }
 
     private void startSniper() {
+        logDriver.clearLog()
         Thread thread = new Thread("Test Application") {
             @Override
             void run() {
@@ -67,6 +71,14 @@ class ApplicationRunner {
 
     void showsSniperHasWonAuction(FakeAuctionServer auction, int lastPrice) {
         driver.showsSniperStatus(auction.getItemId(), lastPrice, lastPrice, textFor(SniperState.WON))
+    }
+
+    void showsSniperHasFailed(FakeAuctionServer auction) {
+        driver.showsSniperStatus(auction.getItemId(), 0, 0, textFor(SniperState.FAILED))
+    }
+
+    void reportsInvalidMessage(FakeAuctionServer auction, String message) {
+        logDriver.hasEntry(CoreMatchers.containsString(message))
     }
 
     void stop() {

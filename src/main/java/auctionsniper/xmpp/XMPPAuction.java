@@ -23,12 +23,38 @@ public class XMPPAuction implements Auction {
     private static final String AUCTION_ID_FORMAT = ITEM_ID_AS_LOGIN + "@%s/" + AUCTION_RESOURCE;
 
     private final Announcer<AuctionEventListener> auctionEventListeners = Announcer.to(AuctionEventListener.class);
+    private final XMPPFailureReporter failureReporter;
     private final Chat chat;
 
-    XMPPAuction(XMPPTCPConnection connection, String itemId) {
-        this.chat = ChatManager.getInstanceFor(connection).createChat(
-            auctionId(itemId, connection),
-            new AuctionMessageTranslator(connection.getUser().asUnescapedString(), auctionEventListeners.announce()));
+    XMPPAuction(XMPPTCPConnection connection, String itemId, XMPPFailureReporter failureReporter) {
+        this.failureReporter = failureReporter;
+        AuctionMessageTranslator translator = translatorFor(connection);
+        this.chat = ChatManager.getInstanceFor(connection).createChat(auctionId(itemId, connection), translator);
+        addAuctionEventListener(chatDisconnectorFor(translator));
+    }
+
+    private AuctionEventListener chatDisconnectorFor(AuctionMessageTranslator translator) {
+        return new AuctionEventListener() {
+            @Override
+            public void auctionFailed() {
+                chat.removeMessageListener(translator);
+            }
+
+            @Override
+            public void auctionClosed() {
+                // no-op
+            }
+
+            @Override
+            public void currentPrice(int price, int increment, PriceSource priceSource) {
+                // no-op
+            }
+        };
+    }
+
+    private AuctionMessageTranslator translatorFor(XMPPTCPConnection connection) {
+        return new AuctionMessageTranslator(connection.getUser().asUnescapedString(), auctionEventListeners.announce(),
+            failureReporter);
     }
 
     @Override
@@ -36,6 +62,7 @@ public class XMPPAuction implements Auction {
         try {
             chat.sendMessage(format(BID_COMMAND_FORMAT, amount));
         } catch (SmackException.NotConnectedException | InterruptedException e) {
+            // TODO report failure
             e.printStackTrace();
         }
     }
@@ -45,6 +72,7 @@ public class XMPPAuction implements Auction {
         try {
             chat.sendMessage(JOIN_COMMAND_FORMAT);
         } catch (SmackException.NotConnectedException | InterruptedException e) {
+            // TODO report failure
             e.printStackTrace();
         }
     }

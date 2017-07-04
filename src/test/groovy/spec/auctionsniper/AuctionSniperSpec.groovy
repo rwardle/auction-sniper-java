@@ -144,11 +144,46 @@ class AuctionSniperSpec extends Specification {
         application.showsSniperHasLostAuction(auction, 1207, 1098)
     }
 
+    def "sniper reports invalid auction message and stop responding to events"() {
+        def brokenMessage = "a broken message"
+
+        setup:
+        auction.startSellingItem()
+        auction2.startSellingItem()
+
+        and:
+        application.startBiddingIn(auction, auction2)
+        auction.hasReceivedJoinRequestFrom(SNIPER_XMPP_ID)
+
+        and:
+        sniperReceivesPriceAndBids(auction, 500, 20, "other bidder")
+
+        when:
+        auction.sendInvalidMessageContaining(brokenMessage)
+
+        then:
+        application.showsSniperHasFailed(auction)
+
+        when:
+        auction.reportPrice(520, 21, "other bidder")
+        waitForAnotherAuctionEvent()
+
+        then:
+        application.reportsInvalidMessage(auction, brokenMessage)
+        application.showsSniperHasFailed(auction)
+    }
+
     def sniperReceivesPriceAndBids(FakeAuctionServer currentAuction, int price, int increment, String bidder) {
         currentAuction.reportPrice(price, increment, bidder)
 
         def bid = price + increment
         application.hasShownSniperIsBidding(currentAuction, price, bid)
         currentAuction.hasReceivedBid(bid, SNIPER_XMPP_ID)
+    }
+
+    def waitForAnotherAuctionEvent() {
+        auction2.hasReceivedJoinRequestFrom(SNIPER_XMPP_ID)
+        auction2.reportPrice(600, 6, "other bidder")
+        application.hasShownSniperIsBidding(auction2, 600, 606)
     }
 }

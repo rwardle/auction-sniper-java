@@ -2,3 +2,4 @@
 .idea/
 build/
 auction-sniper-java.iml
+/auction-sniper.log*
