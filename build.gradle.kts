@@ -6,13 +6,13 @@ plugins {
     groovy
 }
 
-configure<ApplicationPluginConvention> {
+application {
     mainClassName = "auctionsniper.Main"
     group = "com.richardwardle"
     version = "1.0-SNAPSHOT"
 }
 
-configure<JavaPluginConvention> {
+java {
     sourceCompatibility = VERSION_1_8
     targetCompatibility = VERSION_1_8
 }
