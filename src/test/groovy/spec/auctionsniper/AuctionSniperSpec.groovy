@@ -14,7 +14,7 @@ class AuctionSniperSpec extends Specification {
     ApplicationRunner application
 
     def setup() {
-        def hostname = System.getenv(XMPP_HOSTNAME_ENV)
+        def hostname = System.getenv(XMPP_HOSTNAME_ENV) ?: "localhost"
         auction = new FakeAuctionServer(hostname, "item-54321")
         auction2 = new FakeAuctionServer(hostname, "item-65432")
         application = new ApplicationRunner(hostname)

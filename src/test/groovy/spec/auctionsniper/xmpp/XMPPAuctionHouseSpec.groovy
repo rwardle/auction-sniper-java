@@ -21,7 +21,7 @@ class XMPPAuctionHouseSpec extends Specification {
     XMPPAuctionHouse auctionHouse
 
     def setup() {
-        def hostname = System.getenv(XMPP_HOSTNAME_ENV)
+        def hostname = System.getenv(XMPP_HOSTNAME_ENV) ?: "localhost"
 
         auctionServer = new FakeAuctionServer(hostname, "item-54321")
         auctionServer.startSellingItem()
