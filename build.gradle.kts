@@ -1,9 +1,10 @@
 import org.gradle.api.JavaVersion.VERSION_1_8
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     application
     java
-    groovy
+    id("org.jetbrains.kotlin.jvm") version "1.1.51"
 }
 
 application {
@@ -15,6 +16,11 @@ application {
 java {
     sourceCompatibility = VERSION_1_8
     targetCompatibility = VERSION_1_8
+}
+
+val compileTestKotlin: KotlinCompile by tasks
+compileTestKotlin.kotlinOptions {
+    jvmTarget = "1.8"
 }
 
 repositories {
@@ -31,8 +37,12 @@ dependencies {
     testCompile("org.assertj:assertj-swing-junit:3.4.0")
     testCompile("org.mockito:mockito-core:2.+")
     testCompile("org.hamcrest:hamcrest-library:1.3")
-    testCompile("org.codehaus.groovy:groovy-all:2.4.8")
-    testCompile("org.spockframework:spock-core:1.1-groovy-2.4-rc-3")
     testCompile("commons-io:commons-io:+")
     testCompile("com.natpryce:make-it-easy:4.0.1")
+    testCompile(kotlin("stdlib-jre8", "1.1.51"))
+    testCompile(kotlin("test", "1.1.51"))
+    testCompile(kotlin("test-junit", "1.1.51"))
+    testCompile("net.serenity-bdd:serenity-core:1.5.3")
+    testCompile("net.serenity-bdd:serenity-screenplay:1.5.3")
+    testCompile("net.serenity-bdd:serenity-junit:1.5.3")
 }
