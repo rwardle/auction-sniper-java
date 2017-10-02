@@ -1,4 +1,4 @@
-package test.integration.auctionsniper.ui
+package test.auctionsniper.ui
 
 import auctionsniper.Item
 import auctionsniper.SniperPortfolio

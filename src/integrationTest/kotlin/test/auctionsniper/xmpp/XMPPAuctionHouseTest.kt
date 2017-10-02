@@ -1,4 +1,4 @@
-package test.integration.auctionsniper.xmpp
+package test.auctionsniper.xmpp
 
 import auctionsniper.AuctionEventListener
 import auctionsniper.Item
