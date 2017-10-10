@@ -1,8 +1,8 @@
-package test.endtoend.auctionsniper.questions
+package test.auctionsniper.questions
 
 import net.serenitybdd.screenplay.Actor
 import net.serenitybdd.screenplay.Question
-import test.endtoend.auctionsniper.abilities.RunAnAuction
+import test.auctionsniper.abilities.RunAnAuction
 
 class MessageReceived(private val questionCall: (ability: RunAnAuction) -> Unit) : Question<Boolean> {
 

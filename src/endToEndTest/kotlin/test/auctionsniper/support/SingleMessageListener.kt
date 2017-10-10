@@ -1,4 +1,4 @@
-package test.endtoend.auctionsniper.support
+package test.auctionsniper.support
 
 import org.hamcrest.Matcher
 import org.hamcrest.MatcherAssert.assertThat

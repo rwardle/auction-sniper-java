@@ -6,11 +6,11 @@ import auctionsniper.xmpp.XMPPAuctionHouse
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
-import test.endtoend.auctionsniper.abilities.RunAnAuction
-import test.endtoend.auctionsniper.support.Constants.SNIPER_ID
-import test.endtoend.auctionsniper.support.Constants.SNIPER_PASSWORD
-import test.endtoend.auctionsniper.support.Constants.SNIPER_XMPP_ID
-import test.endtoend.auctionsniper.support.Constants.XMPP_HOSTNAME_ENV
+import test.auctionsniper.abilities.RunAnAuction
+import test.auctionsniper.support.Constants.SNIPER_ID
+import test.auctionsniper.support.Constants.SNIPER_PASSWORD
+import test.auctionsniper.support.Constants.SNIPER_XMPP_ID
+import test.auctionsniper.support.Constants.XMPP_HOSTNAME_ENV
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 import kotlin.test.assertTrue

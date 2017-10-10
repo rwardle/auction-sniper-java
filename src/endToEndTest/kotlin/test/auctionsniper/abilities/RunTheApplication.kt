@@ -1,4 +1,4 @@
-package test.endtoend.auctionsniper.abilities
+package test.auctionsniper.abilities
 
 import auctionsniper.Main
 import auctionsniper.SniperState
@@ -6,11 +6,11 @@ import auctionsniper.ui.SnipersTableModel.textFor
 import net.serenitybdd.screenplay.Ability
 import net.serenitybdd.screenplay.Actor
 import org.hamcrest.CoreMatchers
-import test.endtoend.auctionsniper.exceptions.ActorCannotRunTheApplicationException
-import test.endtoend.auctionsniper.support.AuctionLogDriver
-import test.endtoend.auctionsniper.support.AuctionSniperDriver
-import test.endtoend.auctionsniper.support.Constants.SNIPER_ID
-import test.endtoend.auctionsniper.support.Constants.SNIPER_PASSWORD
+import test.auctionsniper.exceptions.ActorCannotRunTheApplicationException
+import test.auctionsniper.support.AuctionLogDriver
+import test.auctionsniper.support.AuctionSniperDriver
+import test.auctionsniper.support.Constants.SNIPER_ID
+import test.auctionsniper.support.Constants.SNIPER_PASSWORD
 
 open class RunTheApplication(private val hostname: String) : Ability {
 

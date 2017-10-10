@@ -7,7 +7,7 @@ import org.assertj.swing.timing.Condition
 import org.assertj.swing.timing.Pause
 import org.junit.After
 import org.junit.Test
-import test.endtoend.auctionsniper.support.AuctionSniperDriver
+import test.auctionsniper.support.AuctionSniperDriver
 
 class MainWindowTest {
 

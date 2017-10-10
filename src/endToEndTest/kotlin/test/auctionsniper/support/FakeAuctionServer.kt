@@ -1,4 +1,4 @@
-package test.endtoend.auctionsniper.support
+package test.auctionsniper.support
 
 import auctionsniper.xmpp.XMPPAuction
 import auctionsniper.xmpp.XMPPAuctionHouse
@@ -12,8 +12,8 @@ import org.jivesoftware.smack.tcp.XMPPTCPConnection
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration
 import org.jxmpp.jid.impl.JidCreate
 import org.jxmpp.jid.parts.Resourcepart
+import test.auctionsniper.support.Constants.AUCTION_PASSWORD
 import test.auctionsniper.xmpp.AuctionMessageTranslatorTest
-import test.endtoend.auctionsniper.support.Constants.AUCTION_PASSWORD
 
 class FakeAuctionServer(hostname: String) {
 

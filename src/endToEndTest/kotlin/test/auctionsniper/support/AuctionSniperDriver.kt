@@ -1,4 +1,4 @@
-package test.endtoend.auctionsniper.support
+package test.auctionsniper.support
 
 import auctionsniper.ui.MainWindow.*
 import org.assertj.swing.core.BasicRobot

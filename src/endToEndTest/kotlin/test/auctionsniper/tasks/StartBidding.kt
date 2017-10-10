@@ -1,8 +1,8 @@
-package test.endtoend.auctionsniper.tasks
+package test.auctionsniper.tasks
 
 import net.serenitybdd.screenplay.Actor
 import net.serenitybdd.screenplay.Task
-import test.endtoend.auctionsniper.abilities.RunTheApplication
+import test.auctionsniper.abilities.RunTheApplication
 
 open class StartBidding(private val work: (ability: RunTheApplication) -> Unit) : Task {
 

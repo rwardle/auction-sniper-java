@@ -1,4 +1,4 @@
-package test.endtoend.auctionsniper.features
+package test.auctionsniper.features
 
 import net.serenitybdd.junit.runners.SerenityRunner
 import net.serenitybdd.screenplay.Actor
@@ -7,14 +7,14 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import test.endtoend.auctionsniper.abilities.RunAnAuction
-import test.endtoend.auctionsniper.abilities.RunTheApplication
-import test.endtoend.auctionsniper.questions.MessageReceived
-import test.endtoend.auctionsniper.questions.ReportsInvalidMessage
-import test.endtoend.auctionsniper.questions.SniperStatus
-import test.endtoend.auctionsniper.support.Constants.SNIPER_XMPP_ID
-import test.endtoend.auctionsniper.support.Constants.XMPP_HOSTNAME_ENV
-import test.endtoend.auctionsniper.tasks.*
+import test.auctionsniper.abilities.RunAnAuction
+import test.auctionsniper.abilities.RunTheApplication
+import test.auctionsniper.questions.MessageReceived
+import test.auctionsniper.questions.ReportsInvalidMessage
+import test.auctionsniper.questions.SniperStatus
+import test.auctionsniper.support.Constants.SNIPER_XMPP_ID
+import test.auctionsniper.support.Constants.XMPP_HOSTNAME_ENV
+import test.auctionsniper.tasks.*
 
 @RunWith(SerenityRunner::class)
 class AuctionSniperStory {

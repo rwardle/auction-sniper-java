@@ -1,4 +1,4 @@
-package test.endtoend.auctionsniper.support
+package test.auctionsniper.support
 
 import auctionsniper.xmpp.XMPPAuctionHouse.LOG_FILE_NAME
 import org.apache.commons.io.FileUtils

@@ -1,9 +1,9 @@
-package test.endtoend.auctionsniper.abilities
+package test.auctionsniper.abilities
 
 import net.serenitybdd.screenplay.Ability
 import net.serenitybdd.screenplay.Actor
-import test.endtoend.auctionsniper.exceptions.ActorCannotRunAnAuctionException
-import test.endtoend.auctionsniper.support.FakeAuctionServer
+import test.auctionsniper.exceptions.ActorCannotRunAnAuctionException
+import test.auctionsniper.support.FakeAuctionServer
 
 open class RunAnAuction(hostname: String) : Ability {
 
