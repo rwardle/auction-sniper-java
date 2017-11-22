@@ -1,24 +1,23 @@
-package auctionsniper
+package test.auctionsniper.support
 
+import auctionsniper.xmpp.XMPPAuctionHouse.LOG_FILE_NAME
 import org.apache.commons.io.FileUtils
 import org.hamcrest.Matcher
-
+import org.hamcrest.MatcherAssert.assertThat
+import java.io.File
 import java.nio.charset.Charset
 import java.util.logging.LogManager
 
-import static auctionsniper.xmpp.XMPPAuctionHouse.LOG_FILE_NAME
-import static org.hamcrest.MatcherAssert.assertThat
-
 class AuctionLogDriver {
 
-    File logFile = new File(LOG_FILE_NAME)
+    private val logFile = File(LOG_FILE_NAME)
 
-    def clearLog() {
+    fun clearLog() {
         logFile.delete()
         LogManager.getLogManager().reset()
     }
 
-    void hasEntry(Matcher<String> matcher) {
+    fun hasEntry(matcher: Matcher<String>) {
         assertThat(FileUtils.readFileToString(logFile, Charset.defaultCharset()), matcher)
     }
 }
