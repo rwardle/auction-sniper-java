@@ -28,14 +28,8 @@ class MainWindowTest {
         driver.startBiddingFor("an item-id", 789)
 
         Pause.pause(object : Condition("join request for 'an item-id'") {
-
-            override fun test(): Boolean {
-                return receivedValue == Item.create("an item-id", 789)
-            }
-
-            override fun descriptionAddendum(): String {
-                return String.format(", receivedValue: '%s'", receivedValue)
-            }
+            override fun test(): Boolean = receivedValue == Item.create("an item-id", 789)
+            override fun descriptionAddendum(): String = String.format(", receivedValue: '%s'", receivedValue)
         }, timeout)
     }
 }

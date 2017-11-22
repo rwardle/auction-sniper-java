@@ -10,9 +10,7 @@ open class RunAnAuction(hostname: String) : Ability {
     private val auctionServer = FakeAuctionServer(hostname)
 
     companion object {
-        fun withServer(hostname: String): RunAnAuction {
-            return RunAnAuction(hostname)
-        }
+        fun withServer(hostname: String): RunAnAuction = RunAnAuction(hostname)
 
         fun asActor(actor: Actor): RunAnAuction {
             if (actor.abilityTo(RunAnAuction::class.java) == null) {
@@ -47,9 +45,7 @@ open class RunAnAuction(hostname: String) : Ability {
         auctionServer.reportPrice(price, increment, bidder)
     }
 
-    fun itemId(): String {
-        return auctionServer.itemId()
-    }
+    fun itemId(): String = auctionServer.itemId()
 
     fun sendInvalidMessageContaining(message: String) {
         auctionServer.sendInvalidMessageContaining(message)

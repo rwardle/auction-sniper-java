@@ -18,9 +18,7 @@ open class RunTheApplication(private val hostname: String) : Ability {
     private lateinit var driver: AuctionSniperDriver
 
     companion object {
-        fun withServer(hostname: String): RunTheApplication {
-            return RunTheApplication(hostname)
-        }
+        fun withServer(hostname: String): RunTheApplication = RunTheApplication(hostname)
 
         fun asActor(actor: Actor): RunTheApplication {
             if (actor.abilityTo(RunTheApplication::class.java) == null) {

@@ -11,8 +11,6 @@ open class SendInvalidMessage(private val message: String) : Task {
     }
 
     companion object {
-        fun containing(message: String): SendInvalidMessage {
-            return SendInvalidMessage(message)
-        }
+        fun containing(message: String): SendInvalidMessage = SendInvalidMessage(message)
     }
 }

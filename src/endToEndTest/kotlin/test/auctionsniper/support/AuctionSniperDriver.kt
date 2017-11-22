@@ -35,9 +35,7 @@ class AuctionSniperDriver(private val timeout: Long) {
         return textBox
     }
 
-    private fun bidButton(): JButtonFixture {
-        return mainFrame.button(JOIN_BUTTON_NAME)
-    }
+    private fun bidButton(): JButtonFixture = mainFrame.button(JOIN_BUTTON_NAME)
 
     fun showsSniperStatus(itemId: String, lastPrice: Int, lastBid: Int, statusText: String) {
         val table = mainFrame.table(SNIPERS_TABLE_NAME)

@@ -11,12 +11,10 @@ open class StartBidding(private val work: (ability: RunTheApplication) -> Unit) 
     }
 
     companion object {
-        fun onItems(vararg itemIds: String): StartBidding {
-            return StartBidding({ ability: RunTheApplication -> ability.startBiddingOnItems(*itemIds) })
-        }
+        fun onItems(vararg itemIds: String): StartBidding =
+            StartBidding({ ability: RunTheApplication -> ability.startBiddingOnItems(*itemIds) })
 
-        fun withStopPrice(itemId: String, stopPrice: Int): StartBidding {
-            return StartBidding({ ability: RunTheApplication -> ability.startBiddingWithStopPrice(itemId, stopPrice) })
-        }
+        fun withStopPrice(itemId: String, stopPrice: Int): StartBidding =
+            StartBidding({ ability: RunTheApplication -> ability.startBiddingWithStopPrice(itemId, stopPrice) })
     }
 }

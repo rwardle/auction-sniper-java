@@ -64,9 +64,7 @@ class FakeAuctionServer(hostname: String) {
         currentChat.sendMessage(java.lang.String.format(AuctionMessageTranslatorTest.PRICE_COMMAND_FORMAT, price, increment, bidder))
     }
 
-    fun itemId(): String {
-        return itemId
-    }
+    fun itemId(): String = itemId
 
     fun sendInvalidMessageContaining(message: String) {
         currentChat.sendMessage(message)

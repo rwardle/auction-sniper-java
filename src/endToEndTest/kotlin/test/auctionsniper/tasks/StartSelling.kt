@@ -11,8 +11,6 @@ open class StartSelling(private val itemId: String) : Task {
     }
 
     companion object {
-        fun item(itemId: String): StartSelling {
-            return StartSelling(itemId)
-        }
+        fun item(itemId: String): StartSelling = StartSelling(itemId)
     }
 }
