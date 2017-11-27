@@ -13,7 +13,7 @@ import test.auctionsniper.questions.MessageReceived
 import test.auctionsniper.questions.ReportsInvalidMessage
 import test.auctionsniper.questions.SniperStatus
 import test.auctionsniper.support.Constants.SNIPER_XMPP_ID
-import test.auctionsniper.support.Constants.XMPP_HOSTNAME_ENV
+import test.auctionsniper.support.Production
 import test.auctionsniper.tasks.*
 
 @RunWith(SerenityRunner::class)
@@ -22,17 +22,16 @@ class AuctionSniperStory {
     private val itemId = "item-54321"
     private val itemId2 = "item-65432"
 
-    private val sniper = Actor.named("Sniper")
-    private val auction = Actor.named("Auction")
-    private val auction2 = Actor.named("Auction2")
+    private lateinit var sniper: Actor
+    private lateinit var auction: Actor
+    private lateinit var auction2: Actor
 
     @Before
     fun setUp() {
-        val hostname = System.getenv(XMPP_HOSTNAME_ENV) ?: "localhost"
-
-        auction.can(RunAnAuction.withServer(hostname))
-        auction2.can(RunAnAuction.withServer(hostname))
-        sniper.can(RunTheApplication.withServer(hostname))
+        val scenario = Production.newScenario()
+        auction = scenario.newAuction("Auction")
+        auction2 = scenario.newAuction("Auction2")
+        sniper = scenario.newSniper("Sniper")
     }
 
     @After
