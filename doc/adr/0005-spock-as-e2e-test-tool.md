@@ -4,7 +4,7 @@ Date: 2017-07-13
 
 ## Status
 
-Accepted
+Superceded by [9. Serenity as e2e test framework](0009-serenity-as-e2e-test-framework.md)
 
 ## Context
 
