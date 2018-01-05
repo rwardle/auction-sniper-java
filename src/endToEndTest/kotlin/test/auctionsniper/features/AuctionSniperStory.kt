@@ -144,7 +144,7 @@ class AuctionSniperStory {
 
         val bid = price + increment
         then(sniper).should(seeThat<Boolean>(
-            SniperStatus.bidding(RunAnAuction.asActor(auctionActor).itemId(), price, bid)))
+                SniperStatus.bidding(RunAnAuction.asActor(auctionActor).itemId(), price, bid)))
         and(auctionActor).should(seeThat<Boolean>(MessageReceived.bid(bid, SNIPER_XMPP_ID)))
     }
 

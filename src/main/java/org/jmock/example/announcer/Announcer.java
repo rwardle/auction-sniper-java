@@ -13,13 +13,14 @@ public class Announcer<T extends EventListener> {
 
 
     public Announcer(Class<? extends T> listenerType) {
-        proxy = listenerType.cast(Proxy.newProxyInstance(
-            listenerType.getClassLoader(),
-            new Class<?>[]{listenerType},
-            (proxy, method, args) -> {
-                announce(method, args);
-                return null;
-            }));
+        proxy = listenerType.cast(
+                Proxy.newProxyInstance(
+                        listenerType.getClassLoader(),
+                        new Class<?>[]{listenerType},
+                        (proxy, method, args) -> {
+                            announce(method, args);
+                            return null;
+                        }));
     }
 
     public void addListener(T listener) {

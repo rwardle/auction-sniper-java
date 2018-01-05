@@ -64,13 +64,13 @@ public class XMPPAuctionHouse implements AuctionHouse {
     }
 
     public static XMPPAuctionHouse connect(String hostname, String username, String password)
-        throws IOException, InterruptedException, XMPPException, SmackException, XMPPAuctionException {
+            throws IOException, InterruptedException, XMPPException, SmackException, XMPPAuctionException {
         XMPPTCPConnectionConfiguration config = XMPPTCPConnectionConfiguration.builder()
-            .setHost(hostname)
-            .setXmppDomain(JidCreate.from(XMPP_DOMAIN).asDomainBareJid())
-            .setSecurityMode(ConnectionConfiguration.SecurityMode.disabled)
-//          .setDebuggerEnabled(true)
-            .build();
+                .setHost(hostname)
+                .setXmppDomain(JidCreate.from(XMPP_DOMAIN).asDomainBareJid())
+                .setSecurityMode(ConnectionConfiguration.SecurityMode.disabled)
+//                .setDebuggerEnabled(true)
+                .build();
 
         XMPPTCPConnection connection = new XMPPTCPConnection(config);
         connection.connect();

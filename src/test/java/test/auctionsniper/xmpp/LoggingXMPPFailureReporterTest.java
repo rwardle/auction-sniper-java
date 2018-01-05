@@ -19,8 +19,8 @@ public class LoggingXMPPFailureReporterTest {
     public void writesMessageTranslationFailureToLog() {
         reporter.cannotTranslateMessage("auction id", "bad message", new Exception("bad"));
         verify(logger).severe("<auction id> "
-            + "Could not translate message \"bad message\" "
-            + "because \"java.lang.Exception: bad\"");
+                + "Could not translate message \"bad message\" "
+                + "because \"java.lang.Exception: bad\"");
     }
 
     @AfterClass

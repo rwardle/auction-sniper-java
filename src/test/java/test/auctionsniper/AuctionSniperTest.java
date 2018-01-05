@@ -56,7 +56,7 @@ public class AuctionSniperTest {
         sniper.auctionFailed();
 
         verify(sniperListener, atLeastOnce()).sniperStateChanged(
-            SniperSnapshot.create(ITEM_ID, 0, 0, FAILED));
+                SniperSnapshot.create(ITEM_ID, 0, 0, FAILED));
     }
 
     @Test
@@ -69,7 +69,7 @@ public class AuctionSniperTest {
 
         verify(auction).bid(bid);
         verify(sniperListener, atLeastOnce()).sniperStateChanged(
-            SniperSnapshot.create(ITEM_ID, price, bid, BIDDING));
+                SniperSnapshot.create(ITEM_ID, price, bid, BIDDING));
     }
 
     @Test
@@ -83,7 +83,7 @@ public class AuctionSniperTest {
         sniper.currentPrice(135, 45, FromSniper);
 
         verify(sniperListener, atLeastOnce())
-            .sniperStateChanged(SniperSnapshot.create(ITEM_ID, 135, 135, WINNING));
+                .sniperStateChanged(SniperSnapshot.create(ITEM_ID, 135, 135, WINNING));
     }
 
     @Test
@@ -146,9 +146,9 @@ public class AuctionSniperTest {
 
         verify(auction).bid(135);
         verify(sniperListener, atLeastOnce())
-            .sniperStateChanged(SniperSnapshot.create(ITEM_ID, 135, 135, WINNING));
+                .sniperStateChanged(SniperSnapshot.create(ITEM_ID, 135, 135, WINNING));
         verify(sniperListener, atLeastOnce())
-            .sniperStateChanged(SniperSnapshot.create(ITEM_ID, 2345, 135, LOSING));
+                .sniperStateChanged(SniperSnapshot.create(ITEM_ID, 2345, 135, LOSING));
     }
 
     private static void verifySniperIs(SniperState state, InvocationOnMock invocation) {

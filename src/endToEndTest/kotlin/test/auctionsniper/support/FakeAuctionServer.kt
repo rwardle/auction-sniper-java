@@ -24,11 +24,11 @@ class FakeAuctionServer(hostname: String) {
 
     init {
         val config = XMPPTCPConnectionConfiguration.builder()
-            .setHost(hostname)
-            .setXmppDomain(JidCreate.from(XMPPAuctionHouse.XMPP_DOMAIN).asDomainBareJid())
-            .setSecurityMode(ConnectionConfiguration.SecurityMode.disabled)
-//          .setDebuggerEnabled(true)
-            .build()
+                .setHost(hostname)
+                .setXmppDomain(JidCreate.from(XMPPAuctionHouse.XMPP_DOMAIN).asDomainBareJid())
+                .setSecurityMode(ConnectionConfiguration.SecurityMode.disabled)
+//                .setDebuggerEnabled(true)
+                .build()
         connection = XMPPTCPConnection(config)
     }
 
