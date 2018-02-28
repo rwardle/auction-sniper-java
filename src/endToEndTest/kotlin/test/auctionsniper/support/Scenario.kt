@@ -4,8 +4,9 @@ import net.serenitybdd.screenplay.Ability
 import net.serenitybdd.screenplay.Actor
 
 class Scenario(
-        private val auctionAbilityFactory: () -> List<Ability>,
-        private val sniperAbilityFactory: () -> List<Ability>) {
+    private val auctionAbilityFactory: () -> List<Ability>,
+    private val sniperAbilityFactory: () -> List<Ability>
+) {
 
     fun newAuction(name: String): Actor {
         val auction = Actor.named(name)

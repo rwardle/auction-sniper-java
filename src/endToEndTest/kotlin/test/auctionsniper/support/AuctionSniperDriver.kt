@@ -14,8 +14,8 @@ import org.assertj.swing.timing.Pause
 class AuctionSniperDriver(private val timeout: Long) {
 
     private val mainFrame: FrameFixture = findFrame(MAIN_WINDOW_NAME)
-            .withTimeout(timeout)
-            .using(BasicRobot.robotWithCurrentAwtHierarchy())
+        .withTimeout(timeout)
+        .using(BasicRobot.robotWithCurrentAwtHierarchy())
 
     fun startBiddingFor(itemId: String, stopPrice: Int) {
         itemIdField().setText(itemId)
@@ -42,17 +42,18 @@ class AuctionSniperDriver(private val timeout: Long) {
         val row = table.cell(itemId).row()
 
         val conditions = arrayOf(
-                tableCellWithText(table, row, "Item", itemId),
-                tableCellWithText(table, row, "Last Price", lastPrice.toString()),
-                tableCellWithText(table, row, "Last Bid", lastBid.toString()),
-                tableCellWithText(table, row, "State", statusText)
+            tableCellWithText(table, row, "Item", itemId),
+            tableCellWithText(table, row, "Last Price", lastPrice.toString()),
+            tableCellWithText(table, row, "Last Bid", lastBid.toString()),
+            tableCellWithText(table, row, "State", statusText)
         )
         Pause.pause(conditions, timeout)
     }
 
     private fun tableCellWithText(table: JTableFixture, rowIndex: Int, columnName: String, text: String): Condition {
         val description = String.format(
-                "Snipers table column '%s' text in row '%d' to be '%s'", columnName, rowIndex, text)
+            "Snipers table column '%s' text in row '%d' to be '%s'", columnName, rowIndex, text
+        )
 
         return object : Condition(description) {
             var failedComparisonValue: String? = null

@@ -24,11 +24,11 @@ class FakeAuctionServer(hostname: String) {
 
     init {
         val config = XMPPTCPConnectionConfiguration.builder()
-                .setHost(hostname)
-                .setXmppDomain(JidCreate.from(XMPPAuctionHouse.XMPP_DOMAIN).asDomainBareJid())
-                .setSecurityMode(ConnectionConfiguration.SecurityMode.disabled)
-//                .setDebuggerEnabled(true)
-                .build()
+            .setHost(hostname)
+            .setXmppDomain(JidCreate.from(XMPPAuctionHouse.XMPP_DOMAIN).asDomainBareJid())
+            .setSecurityMode(ConnectionConfiguration.SecurityMode.disabled)
+//          .setDebuggerEnabled(true)
+            .build()
         connection = XMPPTCPConnection(config)
     }
 
@@ -40,7 +40,11 @@ class FakeAuctionServer(hostname: String) {
         this.itemId = itemId
 
         connection.connect()
-        connection.login(java.lang.String.format(XMPPAuction.ITEM_ID_AS_LOGIN, itemId), AUCTION_PASSWORD, Resourcepart.from(XMPPAuctionHouse.AUCTION_RESOURCE))
+        connection.login(
+            java.lang.String.format(XMPPAuction.ITEM_ID_AS_LOGIN, itemId),
+            AUCTION_PASSWORD,
+            Resourcepart.from(XMPPAuctionHouse.AUCTION_RESOURCE)
+        )
         val listener = { chat: Chat, _: Boolean ->
             currentChat = chat
             chat.addMessageListener(messageListener)
@@ -53,7 +57,10 @@ class FakeAuctionServer(hostname: String) {
     }
 
     fun hasReceivedBid(bid: Int, sniperId: String) {
-        receivesAMessageMatching(sniperId, CoreMatchers.equalTo(java.lang.String.format(XMPPAuction.BID_COMMAND_FORMAT, bid)))
+        receivesAMessageMatching(
+            sniperId,
+            CoreMatchers.equalTo(java.lang.String.format(XMPPAuction.BID_COMMAND_FORMAT, bid))
+        )
     }
 
     fun announceClosed() {
@@ -61,7 +68,14 @@ class FakeAuctionServer(hostname: String) {
     }
 
     fun reportPrice(price: Int, increment: Int, bidder: String) {
-        currentChat.sendMessage(java.lang.String.format(AuctionMessageTranslatorTest.PRICE_COMMAND_FORMAT, price, increment, bidder))
+        currentChat.sendMessage(
+            java.lang.String.format(
+                AuctionMessageTranslatorTest.PRICE_COMMAND_FORMAT,
+                price,
+                increment,
+                bidder
+            )
+        )
     }
 
     fun itemId(): String = itemId
