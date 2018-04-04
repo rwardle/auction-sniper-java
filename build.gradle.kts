@@ -6,7 +6,7 @@ plugins {
     application
     java
     idea
-    id("org.jetbrains.kotlin.jvm") version "1.2.21"
+    id("org.jetbrains.kotlin.jvm") version "1.2.30"
     id("org.unbroken-dome.test-sets") version "1.4.2"
 }
 
@@ -47,7 +47,7 @@ idea {
 }
 
 dependencies {
-    val kotlinVersion = "1.2.21"
+    val kotlinVersion = "1.2.30"
     val serenityVersion = "1.5.3"
     val smackVersion = "4.2.0-beta2"
 
