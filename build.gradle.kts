@@ -6,7 +6,7 @@ plugins {
     application
     java
     idea
-    id("org.jetbrains.kotlin.jvm") version "1.2.30"
+    kotlin("jvm") version "1.2.41"
     id("org.unbroken-dome.test-sets") version "1.4.2"
 }
 
@@ -47,7 +47,6 @@ idea {
 }
 
 dependencies {
-    val kotlinVersion = "1.2.30"
     val serenityVersion = "1.5.3"
     val smackVersion = "4.2.0-beta2"
 
@@ -60,9 +59,9 @@ dependencies {
     testCompile("org.mockito:mockito-core:2.+")
     testCompile("org.hamcrest:hamcrest-library:1.3")
     testCompile("com.natpryce:make-it-easy:4.0.1")
-    add("endToEndTestCompile", kotlin("stdlib-jre8", kotlinVersion))
-    add("endToEndTestCompile", kotlin("test", kotlinVersion))
-    add("endToEndTestCompile", kotlin("test-junit", kotlinVersion))
+    add("endToEndTestCompile", kotlin("stdlib-jdk8"))
+    add("endToEndTestCompile", kotlin("test"))
+    add("endToEndTestCompile", kotlin("test-junit"))
     add("endToEndTestCompile", "org.assertj:assertj-swing-junit:3.4.0")
     add("endToEndTestCompile", "net.serenity-bdd:serenity-core:$serenityVersion")
     add("endToEndTestCompile", "net.serenity-bdd:serenity-screenplay:$serenityVersion")
