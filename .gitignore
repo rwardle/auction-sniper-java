@@ -1,5 +1,7 @@
 .gradle
-.idea/
+!/.idea
+/.idea/*
+!/.idea/runConfigurations
 build/
 out/
 target/
