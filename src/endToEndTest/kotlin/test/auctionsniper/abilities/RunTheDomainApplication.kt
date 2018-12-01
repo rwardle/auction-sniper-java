@@ -30,7 +30,7 @@ open class RunTheDomainApplication(private val hostname: String) : IRunTheApplic
     }
 
     private fun assertSniperStatus(itemId: String, lastPrice: Int, lastBid: Int, state: SniperState) {
-        await().atMost(1, SECONDS).untilAsserted({ assertEquals(state, sniperSnapshots[itemId]?.state()) })
+        await().atMost(1, SECONDS).untilAsserted { assertEquals(state, sniperSnapshots[itemId]?.state()) }
         assertEquals(lastPrice, sniperSnapshots[itemId]?.lastPrice())
         assertEquals(lastBid, sniperSnapshots[itemId]?.lastBid())
     }
@@ -80,9 +80,9 @@ open class RunTheDomainApplication(private val hostname: String) : IRunTheApplic
 
         val sniperPortfolio = SniperPortfolio()
         sniperPortfolio.addPortfolioListener { auctionSniper ->
-            sniperSnapshots.put(auctionSniper.snapshot.itemId(), auctionSniper.snapshot)
+            sniperSnapshots[auctionSniper.snapshot.itemId()] = auctionSniper.snapshot
             auctionSniper.addSniperListener { snapshot ->
-                sniperSnapshots.put(snapshot.itemId(), snapshot)
+                sniperSnapshots[snapshot.itemId()] = snapshot
             }
         }
 

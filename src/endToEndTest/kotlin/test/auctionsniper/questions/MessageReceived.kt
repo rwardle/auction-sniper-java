@@ -13,15 +13,11 @@ class MessageReceived(private val questionCall: (ability: RunAnAuction) -> Unit)
 
     companion object {
         fun join(sniperId: String): MessageReceived {
-            return MessageReceived(
-                { ability: RunAnAuction -> ability.hasReceivedJoinRequestFrom(sniperId) }
-            )
+            return MessageReceived { ability: RunAnAuction -> ability.hasReceivedJoinRequestFrom(sniperId) }
         }
 
         fun bid(bid: Int, sniperId: String): MessageReceived {
-            return MessageReceived(
-                { ability: RunAnAuction -> ability.hasReceivedBid(bid, sniperId) }
-            )
+            return MessageReceived { ability: RunAnAuction -> ability.hasReceivedBid(bid, sniperId) }
         }
     }
 }

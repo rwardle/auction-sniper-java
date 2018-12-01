@@ -23,7 +23,7 @@ class MainWindowTest {
     @Test
     fun `makes user request when join button clicked`() {
         var receivedValue: Item? = null
-        mainWindow.addUserRequestListener({ item: Item -> receivedValue = item })
+        mainWindow.addUserRequestListener { item: Item -> receivedValue = item }
 
         driver.startBiddingFor("an item-id", 789)
 
