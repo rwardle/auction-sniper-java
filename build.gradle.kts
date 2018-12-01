@@ -7,7 +7,7 @@ plugins {
     java
     idea
     kotlin("jvm") version "1.3.10"
-    id("org.unbroken-dome.test-sets") version "1.4.2"
+    id("org.unbroken-dome.test-sets") version "2.0.3"
 }
 
 application {
@@ -36,7 +36,7 @@ testSets {
 }
 
 configurations {
-    get("integrationTestCompile").extendsFrom(get("endToEndTestCompile"))
+    get("integrationTestImplementation").extendsFrom(get("endToEndTestImplementation"))
 }
 
 idea {
@@ -47,28 +47,31 @@ idea {
 }
 
 dependencies {
+    val autoValueVersion = "1.6.2"
     val serenityVersion = "1.5.3"
     val smackVersion = "4.2.0-beta2"
 
-    compileOnly("com.google.auto.value:auto-value:1.2")
-    compile("org.igniterealtime.smack:smack-im:$smackVersion")
-    compile("org.igniterealtime.smack:smack-tcp:$smackVersion")
+    annotationProcessor("com.google.auto.value:auto-value:$autoValueVersion")
+    implementation("com.google.auto.value:auto-value-annotations:$autoValueVersion")
+    implementation("org.igniterealtime.smack:smack-im:$smackVersion")
+    implementation("org.igniterealtime.smack:smack-tcp:$smackVersion")
     runtime("org.igniterealtime.smack:smack-core:$smackVersion")
     runtime("org.igniterealtime.smack:smack-java7:$smackVersion")
-    testCompile("junit:junit:4.12")
-    testCompile("org.mockito:mockito-core:2.+")
-    testCompile("org.hamcrest:hamcrest-library:1.3")
-    testCompile("com.natpryce:make-it-easy:4.0.1")
-    add("endToEndTestCompile", kotlin("stdlib-jdk8"))
-    add("endToEndTestCompile", kotlin("test"))
-    add("endToEndTestCompile", kotlin("test-junit"))
-    add("endToEndTestCompile", "org.assertj:assertj-swing-junit:3.4.0")
-    add("endToEndTestCompile", "net.serenity-bdd:serenity-core:$serenityVersion")
-    add("endToEndTestCompile", "net.serenity-bdd:serenity-screenplay:$serenityVersion")
-    add("endToEndTestCompile", "net.serenity-bdd:serenity-junit:$serenityVersion")
-    add("endToEndTestCompile", "org.awaitility:awaitility:3.0.0")
-    add("endToEndTestCompile", java.sourceSets["test"].output.classesDirs)
-    add("integrationTestCompile", java.sourceSets["endToEndTest"].output.classesDirs)
+    testImplementation("junit:junit:4.12")
+    testImplementation("org.mockito:mockito-core:2.+")
+    testImplementation("org.hamcrest:hamcrest-library:1.3")
+    testImplementation("com.natpryce:make-it-easy:4.0.1")
+    add("endToEndTestImplementation", kotlin("stdlib-jdk8"))
+    add("endToEndTestImplementation", kotlin("test"))
+    add("endToEndTestImplementation", kotlin("test-junit"))
+    add("endToEndTestImplementation", "org.assertj:assertj-swing-junit:3.4.0")
+    add("endToEndTestImplementation", "net.serenity-bdd:serenity-core:$serenityVersion")
+    add("endToEndTestImplementation", "net.serenity-bdd:serenity-screenplay:$serenityVersion")
+    add("endToEndTestImplementation", "net.serenity-bdd:serenity-junit:$serenityVersion")
+    add("endToEndTestImplementation", "org.awaitility:awaitility:3.0.0")
+    add("endToEndTestImplementation", sourceSets["main"].output.classesDirs)
+    add("endToEndTestImplementation", sourceSets["test"].output.classesDirs)
+    add("integrationTestImplementation", sourceSets["endToEndTest"].output.classesDirs)
 }
 
 tasks {
