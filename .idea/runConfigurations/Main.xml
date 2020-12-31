@@ -2,6 +2,7 @@
   <configuration default="false" name="Main" type="Application" factoryName="Application" nameIsGenerated="true">
     <option name="MAIN_CLASS_NAME" value="auctionsniper.Main" />
     <module name="auction-sniper-java.main" />
+    <option name="PROGRAM_PARAMETERS" value="localhost sniper sniper" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="auctionsniper.*" />
