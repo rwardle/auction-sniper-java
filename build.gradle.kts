@@ -1,6 +1,5 @@
 import org.gradle.api.JavaVersion.VERSION_1_8
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import org.unbrokendome.gradle.plugins.testsets.dsl.TestSet
 
 plugins {
     application
