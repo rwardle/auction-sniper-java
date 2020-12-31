@@ -7,3 +7,4 @@ out/
 target/
 auction-sniper-java.iml
 /auction-sniper.log*
+/src/main/generated/
