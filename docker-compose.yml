@@ -2,7 +2,7 @@ version: "2"
 
 services:
   openfire:
-    image: rwardle/openfire-goos
+    image: rwardle/openfire-goos:1.0.0
     container_name: auctionsniperjava_openfire
     volumes:
       - data:/var/lib/openfire
