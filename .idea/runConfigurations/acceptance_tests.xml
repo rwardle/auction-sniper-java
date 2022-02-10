@@ -1,14 +1,12 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="all tests" type="JUnit" factoryName="JUnit" singleton="true">
-    <option name="PACKAGE_NAME" value="test" />
+  <configuration default="false" name="acceptance tests" type="JUnit" factoryName="JUnit" singleton="true">
+    <module name="auction-sniper-java.acceptanceTest" />
     <option name="MAIN_CLASS_NAME" value="" />
     <option name="METHOD_NAME" value="" />
-    <option name="TEST_OBJECT" value="package" />
+    <option name="TEST_OBJECT" value="directory" />
     <option name="PARAMETERS" value="" />
     <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-    <option name="TEST_SEARCH_SCOPE">
-      <value defaultName="wholeProject" />
-    </option>
+    <dir value="$PROJECT_DIR$/src/acceptanceTest/kotlin" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>

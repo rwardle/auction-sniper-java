@@ -30,18 +30,18 @@ repositories {
 }
 
 testSets {
-    create("endToEndTest")
+    create("acceptanceTest")
     create("integrationTest")
 }
 
 configurations {
-    get("integrationTestImplementation").extendsFrom(get("endToEndTestImplementation"))
+    get("integrationTestImplementation").extendsFrom(get("acceptanceTestImplementation"))
 }
 
 idea {
     module {
-        sourceDirs.removeAll(files("src/endToEndTest/kotlin", "src/integrationTest/kotlin"))
-        testSourceDirs.addAll(files("src/endToEndTest/kotlin", "src/integrationTest/kotlin"))
+        sourceDirs.removeAll(files("src/acceptanceTest/kotlin", "src/integrationTest/kotlin"))
+        testSourceDirs.addAll(files("src/acceptanceTest/kotlin", "src/integrationTest/kotlin"))
     }
 }
 
@@ -60,27 +60,27 @@ dependencies {
     testImplementation("org.mockito:mockito-core:2.+")
     testImplementation("org.hamcrest:hamcrest-library:1.3")
     testImplementation("com.natpryce:make-it-easy:4.0.1")
-    add("endToEndTestImplementation", kotlin("stdlib-jdk8"))
-    add("endToEndTestImplementation", kotlin("test"))
-    add("endToEndTestImplementation", kotlin("test-junit"))
-    add("endToEndTestImplementation", "org.assertj:assertj-swing-junit:3.4.0")
-    add("endToEndTestImplementation", "net.serenity-bdd:serenity-core:$serenityVersion")
-    add("endToEndTestImplementation", "net.serenity-bdd:serenity-screenplay:$serenityVersion")
-    add("endToEndTestImplementation", "net.serenity-bdd:serenity-junit:$serenityVersion")
-    add("endToEndTestImplementation", "org.awaitility:awaitility:3.0.0")
-    add("endToEndTestImplementation", sourceSets["main"].output.classesDirs)
-    add("endToEndTestImplementation", sourceSets["test"].output.classesDirs)
-    add("integrationTestImplementation", sourceSets["endToEndTest"].output.classesDirs)
+    add("acceptanceTestImplementation", kotlin("stdlib-jdk8"))
+    add("acceptanceTestImplementation", kotlin("test"))
+    add("acceptanceTestImplementation", kotlin("test-junit"))
+    add("acceptanceTestImplementation", "org.assertj:assertj-swing-junit:3.4.0")
+    add("acceptanceTestImplementation", "net.serenity-bdd:serenity-core:$serenityVersion")
+    add("acceptanceTestImplementation", "net.serenity-bdd:serenity-screenplay:$serenityVersion")
+    add("acceptanceTestImplementation", "net.serenity-bdd:serenity-junit:$serenityVersion")
+    add("acceptanceTestImplementation", "org.awaitility:awaitility:3.0.0")
+    add("acceptanceTestImplementation", sourceSets["main"].output.classesDirs)
+    add("acceptanceTestImplementation", sourceSets["test"].output.classesDirs)
+    add("integrationTestImplementation", sourceSets["acceptanceTest"].output.classesDirs)
 }
 
 tasks {
     val test: Task = get("test")
     val integrationTest: Task = get("integrationTest")
-    val endToEndTest: Task = get("endToEndTest")
+    val acceptanceTest: Task = get("acceptanceTest")
 
-    get("check").dependsOn(integrationTest, endToEndTest)
+    get("check").dependsOn(integrationTest, acceptanceTest)
 
     integrationTest.mustRunAfter(test)
-    endToEndTest.mustRunAfter(test)
-    endToEndTest.mustRunAfter(integrationTest)
+    acceptanceTest.mustRunAfter(test)
+    acceptanceTest.mustRunAfter(integrationTest)
 }
