@@ -72,15 +72,3 @@ dependencies {
     add("acceptanceTestImplementation", sourceSets["test"].output.classesDirs)
     add("integrationTestImplementation", sourceSets["acceptanceTest"].output.classesDirs)
 }
-
-tasks {
-    val test: Task = get("test")
-    val integrationTest: Task = get("integrationTest")
-    val acceptanceTest: Task = get("acceptanceTest")
-
-    get("check").dependsOn(integrationTest, acceptanceTest)
-
-    integrationTest.mustRunAfter(test)
-    acceptanceTest.mustRunAfter(test)
-    acceptanceTest.mustRunAfter(integrationTest)
-}
