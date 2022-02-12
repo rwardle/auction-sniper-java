@@ -1,0 +1,62 @@
+project_name: auction-sniper-java
+
+containers:
+    java-build-env:
+        image: eclipse-temurin:8
+        volumes:
+            - local: <{batect.project_directory}
+              container: /code
+              options: cached
+            - type: cache
+              name: gradle-cache
+              container: /home/container-user/.gradle
+        working_directory: /code
+        environment:
+            GRADLE_OPTS: -Dorg.gradle.daemon=false
+        run_as_current_user:
+            enabled: true
+            home_directory: /home/container-user
+
+    openfire:
+        image: rwardle/openfire-goos:1.0.1
+
+tasks:
+    clean:
+        description: Clean the build environment.
+        group: Build tasks
+        run:
+            container: java-build-env
+            command: ./gradlew clean
+
+    build:
+        description: Build the application.
+        group: Build tasks
+        run:
+            container: java-build-env
+            command: ./gradlew assemble
+
+    unitTest:
+        description: Run the unit tests.
+        group: Test tasks
+        run:
+            container: java-build-env
+            command: ./gradlew test
+
+    acceptanceTest:
+        description: Run the acceptance tests against the domain layer.
+        group: Test tasks
+        dependencies:
+            - openfire
+        run:
+            container: java-build-env
+            command: ./gradlew acceptanceTest
+            environment:
+                PRODUCTION_TYPE: domain
+                XMPP_HOSTNAME: openfire
+
+    shell:
+        description: Start a shell in the development environment.
+        group: Utility tasks
+        run:
+            container: java-build-env
+            command: bash
