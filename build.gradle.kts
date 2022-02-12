@@ -5,7 +5,7 @@ plugins {
     application
     java
     idea
-    kotlin("jvm") version "1.3.10"
+    kotlin("jvm") version "1.3.72"
     id("org.unbroken-dome.test-sets") version "2.0.3"
 }
 
