@@ -26,9 +26,10 @@ decisions made in the project along with their context and consequences.
 
 ## Acceptance tests
 
-Acceptance tests are written as BDD scenarios using [Serenity and the Screenplay pattern][serenity].
+[Acceptance tests][features] are written as BDD scenarios using [Serenity and the Screenplay pattern][serenity].
 They can be run end-to-end against the GUI or can be run directly against the domain model.
 
+[features]: src/acceptanceTest/kotlin/test/auctionsniper/features
 [serenity]: http://serenity-bdd.info/docs/articles/screenplay-tutorial.html
 
 ## Openfire
